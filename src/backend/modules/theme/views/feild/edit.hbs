@@ -1,0 +1,132 @@
+
+
+<form action="{{module_function_path}}/{{idTheme}}/{{function_sub_name}}/{{row._id}}/{{function_sub_sub_name}}/{{feild._id}}?_method=PUT" method="POST">
+<input type="hidden" name="feild[idTheme]" value="{{idTheme}}">
+<input type="hidden" name="feild[idRow]" value="{{idRow}}">
+    <div class="container">
+           <div class="row">
+                <div class="col-md-6">
+                   <!-- ten  -->
+                    <div class="form-group mb-3">
+                        <label >Tiêu đề trường</label>
+                        <input type="text" class="form-control" value="{{feild.title}}"  name="feild[title]" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label >Tên trường (name - tiếng anh viết liền)</label>
+                        <input type="text" class="form-control" value="{{feild.name}}" name="feild[name]" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label >Mô tả trường (tùy chọn)</label>
+                        <input type="text" class="form-control" value="{{feild.des}}" name="feild[des]">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Chọn kiểu trường</label>
+                        <select class="form-control" id="selectOption" name="feild[type]">
+                            <option value="text">Tiêu đề (text)</option>
+                            <option value="textarea">Đoạn văn (textarea)</option>
+                            <option value="editor">Trình soạn thoại (editor)</option>
+                            <option value="image">Hình ảnh (image)</option>
+                            <option value="select">Lựa chọn (select)</option>
+                            <option value="checkbox">Chọn nhiều (checkbox)</option>
+                        </select>
+                      
+                    </div>
+                  
+               </div>
+               <div class="col-md-6">
+                   <div class="form-group mb-3 form-option">
+                        <label >Tạo lựa chọn cho các trường lựa chọn (select, checkbox)</label>
+                        {{!-- foreach cacs truong  --}}
+
+                        {{#each feild.option}}
+                            <div class="row feild feild_{{@index}} mb-3">
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" name="feild[option][{{@index}}][name]" value="{{this.name}}" placeholder="name">
+                                </div>
+                                <div class="col-md-7">
+                                    <input type="text" class="form-control" name="feild[option][{{@index}}][value]" value="{{this.value}}" placeholder="value">
+                                </div>
+                                {{#ifGreaterThan @index 0 }}
+                                    <div class="col-md-1">
+                                        <button class="btn btn-danger btn-delete-feild" data-classRow="feild_{{@index}}">Xóa</buton>
+                                    </div>
+                                {{/ifGreaterThan}}
+                            </div>
+                        {{/each}}
+                        
+                        <div id="add_feild"> </div>
+                         <div class="mt-2">
+                                * Name: Viết liền, không dấu <br>
+                                * Value: giá trị
+                            </div>
+                    
+                        <div class="text-right">
+                            <span href="#" class="btn btn-sm btn-primary cursor" id="add">Thêm tùy chọn</span>
+                        </div>
+                        <script>
+                            $('#add').click(function(e){
+                                e.preventDefault();
+                                var count = $('.feild').length;
+                                var key = count + 1;
+                                $('#add_feild').append('<div class="row feild mb-3 feild_'+key+'">'+
+                                
+                                        '<div class="col-md-4">'+
+                                            '<input type="text" class="form-control" name="feild[option]['+key+'][name]" placeholder="name">'+
+                                        '</div>'+
+                                        '<div class="col-md-7">'+
+                                            '<input type="text" class="form-control" name="feild[option]['+key+'][value]" placeholder="value">'+
+                                        '</div>'+
+                                        '<div class="col-md-1">'+
+                                        '<button class="btn btn-danger btn-delete-feild" data-classRow="feild_'+key+'">Xóa</buton>'+
+                                        '</div>'+
+                                
+                                '</div>');
+
+                            });
+
+                            //xoa truong vua them
+                            $('#add_feild').on('click', '.btn-delete-feild',function(e){
+                                e.preventDefault();
+                                var classRow = $(this).attr('data-classRow');
+                                $('.'+classRow).remove();
+                            });
+                            //xoa truong da co 
+                            $('.btn-delete-feild').click(function(){
+                                var classRow = $(this).attr('data-classRow');
+                                $('.'+classRow).remove();
+                            });
+                        
+                        </script>
+                    </div>
+                      <script>
+                            var type = '{{feild.type}}';
+                            if(type  == ''){ var type = 'text'}
+                            $('#selectOption').val(type);
+                           
+                            if((type == 'select') || (type == 'checkbox')){
+                                $('.form-option').css('display','');
+                            }else{
+                                $('.form-option').css('display','none');
+                            }
+
+                           // hien lua chon khi chon select va checkbox 
+                            $('#selectOption').change(function(){
+                                val = $(this).val();
+                                if((val == 'select') || (val == 'checkbox')){
+                                    $('.form-option').css('display','');
+                                }else{
+                                    $('.form-option').css('display','none');
+                                }
+                            });
+                        </script>
+               </div>
+               <div class="col-md-12">
+                    <div class=" my-3">
+                        <button type="submit"  class="btn btn-primary mr-3">Lưu</button>
+                        <a class="btn btn-danger" href="{{module_function_path}}/{{idTheme}}/{{function_sub_name}}/{{idRow}}/{{function_sub_sub_name}}">Hủy và quay lại</a>
+                    </div>
+               </div>
+            </div>
+    </div>
+    
+</form>

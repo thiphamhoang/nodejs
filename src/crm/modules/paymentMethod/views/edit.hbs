@@ -1,0 +1,21 @@
+
+
+<form action="{{module_path}}/{{item._id}}?_method=PUT" method="POST">
+    <div class="container">
+           <div class="row">
+               <div class="col-md-6">
+                   <!-- ten danh muc -->
+                    <div class="form-group mb-3">
+                        <label for="name_cat">Tên {{module_name}}</label>
+                        <input type="text" class="form-control" id="name" value="{{item.name}}" name="name" required>
+                    </div>
+                    
+               </div>
+               
+                <div class="col-md-12">
+                     <button type="submit" name="save" value="save" class="btn btn-primary mr-3">Lưu</button>
+                      <a href="{{module_path}}" class="btn btn-danger mr-3">Hủy và quay lại</a>
+                </div>
+            </div>
+    </div>
+</form>

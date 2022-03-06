@@ -1,0 +1,235 @@
+
+
+<form action="{{module_path}}/{{customer._id}}/update/?_method=PUT" method="POST" enctype="multipart/form-data">
+    <div class="container">
+           <div class="row">
+               <div class="col-md-6">
+                   
+                   <!-- ten danh muc -->
+                    <div class="form-group mb-3">
+                        <label >Tên {{module_name}}</label>
+                        <input type="text" class="form-control" name="name" value="{{customer.name}}" required placeholder="Họ và tên">
+                    </div>
+                    {{!-- dien thoai  --}}
+                     <div class="form-group mb-3">
+                        <label >Số điện thoại</label>
+                        <div class="row">
+                             
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="phone_1" value="{{customer.phone_1}}" placeholder="Số điện thoại 1">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="phone_2" value="{{customer.phone_2}}" placeholder="Số điện thoại 2">
+                            </div>
+                        </div>
+                    </div>
+                    {{!-- ngay sinh  --}}
+                    <div class="form-group mb-3">
+                        <label >Ngày sinh</label>
+                        <input type="text" class="form-control" value="{{dateCurren customer.birthday}}" id="birthday" name="birthday">
+                        
+                        <script type="text/javascript">
+                            
+                            $('#birthday').datepicker({
+                            autoclose: true,
+                            format:'d-m-yyyy'
+                            });
+                        </script>
+                    </div>
+                    {{!-- gioi tinh  --}}
+                     <div class="form-group mb-3">
+                        <label >Giới tính</label>
+                        <select name="sex" class="form-select" id="sex">
+                            {{!-- <option value="">Trống</option> --}}
+                            <option value="male">Nam</option>
+                            <option value="female">Nữ</option>
+                            <option value="other">Khác</option>
+                        </select>
+                        <script>
+                            $('#sex').val('{{customer.sex}}')
+                        </script>
+                    </div>
+                    {{!-- dia chỉ  --}}
+                    <div class="form-group mb-3">
+                        <label >Địa chỉ</label>
+                        <textarea type="textarea" class="form-control" name="address">{{customer.address}}</textarea>
+                    </div>
+                    <div class="form-group mb-3" >
+                       <div class="row">
+                           <div class="col-md-6">
+                               <label >Tỉnh - thành phố</label>
+                                <select name="cityId" class="form-select" id="cityId">
+                                    {{!-- <option value="">Trống</option> --}}
+                                    {{#each cityList}}
+                                        <option value="{{this._id}}">{{this.name}}</option>
+                                    {{/each}}
+                                </select>
+                           </div>
+                           <div class="col-md-6">
+                               <label for="">Quận huyện</label>
+                               <select name="districtId" class="form-select" id="district"></select>
+                           </div>
+                          
+                       </div>
+                       <script>
+                            $('#cityId').val('{{customer.cityId}}')
+                            $.get('/crm/district/getDictrict/{{customer.cityId}}',function(data){
+                                $('#district').html(data)
+                                $('#district').val('{{customer.districtId}}');
+                            })
+
+                           $('#cityId').change(function(){
+                               var cityId = $(this).val();
+                               $.get('/crm/district/getDictrict/'+cityId,function(data){
+                                    $('#district').html(data)
+                                })
+                           });
+                            
+                       </script>
+                    </div>
+                     <div class="mb-3">
+                    <label for="formFile" class="form-label">Ảnh đại diện</label>
+                    <input class="form-control" name="img" type="file" id="imgInp">
+                    {{!-- anh dai dien  --}}
+                    <div class="imgPreview" style="display:none" >
+                        {{!-- anh xem truoc  --}}
+                         <input type="hidden" name="oldImage" value="{{customer.img}}" id="oldImage">
+                        <input type="hidden" name="deleteImage" id="deleteImage">
+                        <img id="blah" class=" mt-3" src="#"  height="80px" width="auto"/>
+                   
+                        {{!-- xoa anh  --}}
+                        <span class="btn btn-secondary btn-sm mt-1 btn-delete-img">Xóa ảnh cũ</span>
+                        <span class="btn btn-info btn-sm mt-1 btn-delete-img-last" style="display:none">Hủy ảnh vừa chọn</span>
+                    </div>
+                    
+                    <script>
+                        //anh chinh sua
+                        var imgCurrent = '{{customer.img}}';
+                        var customer_id = '{{customer._id}}';
+                        var folder_module = '{{folder_module}}';
+                        var oldImage = $('#oldImage').val();
+                        if(imgCurrent != ''){
+                            $('.imgPreview').css('display','');
+                            $('#blah').attr('src','/img/user/{{userId}}/customer/{{customer.img}}')
+                        }
+                        //xem truoc anh vua upload 
+                        imgInp.onchange = evt => {
+                            const [file] = imgInp.files
+                            if (file) {
+                                $('.imgPreview').css('display','');
+                                blah.src = URL.createObjectURL(file)
+                                if(oldImage != ''){
+                                    $('#deleteImage').val('on');
+                                }else{
+                                    $('.btn-delete-img').css('display','none')
+                                }
+                                $('.btn-delete-img-last').css('display','');
+                            }
+                        }
+                        $('.btn-delete-img').click(function(){
+                            $('#imgInp').val('');
+                           
+                            $('.imgPreview').css('display','none');
+                            //add gia on va input deleteImage
+                            $('#deleteImage').val('on');
+                        });
+
+                       // huy anh vua chon 
+                        $('.btn-delete-img-last').click(function(){
+                            $('#imgInp').val('');
+                            if(oldImage != ''){
+                                $('#blah').attr('src','/img/user/{{userId}}/customer/{{customer.img}}');
+                            }else{
+                                 $('.imgPreview').css('display','none');
+                            }
+                            $('#deleteImage').val('');
+                            $('.btn-delete-img-last').css('display','none');
+                        });
+                    </script>
+                </div>
+               </div>
+               <div class="col-md-6">
+                   {{!-- loai khach  --}}
+                    <div class="form-group mb-3">
+                        <label >Loại khách</label> 
+                        <select name="typeOfCustomer" class="form-select" id="typeOfCustomer">
+                            <option value="personal">Cá nhân</option>
+                            <option value="company">Công ty</option>
+                        </select>
+                      
+                    </div>
+                    <div class="form-group mb-3" style="display:none" id="div_company">
+                        <label >Công ty</label>
+                        <input type="text" class="form-control" name="company" value="{{customer.typeOfCustomer}}">
+                    </div>
+                    <script>
+                        var typeOfCustomer = '{{customer.typeOfCustomer}}';
+                        $('#typeOfCustomer').val(typeOfCustomer)
+                            
+                        if(typeOfCustomer == 'company'){
+                            $('#div_company').css('display','')
+                        }else{
+                            $('#div_company').css('display','none')
+                        }
+
+                        $('#typeOfCustomer').change(function(){
+                            var val = $(this).val();
+                            if(val == 'company'){
+                                $('#div_company').css('display','');
+                            }else{
+                                $('#div_company').css('display','none');
+                            }
+                        });
+                    </script>
+                    <div class="form-group mb-3" >
+                        <label>Mã số thuế</label>
+                        <input type="text" class="form-control" name="taxCode" value="{{customer.taxCode}}">
+                    </div>
+                    {{!-- email  --}}
+                    <div class="form-group mb-3" >
+                        <label>Email</label>
+                        <input type="text" class="form-control" name="email" value="{{customer.email}}">
+                    </div>
+
+                    <div class="form-group mb-3" >
+                        <label>Facebook</label>
+                        <input type="text" class="form-control" name="facebook" value="{{customer.facebook}}">
+                    </div>
+                    <div class="form-group mb-3" >
+                       <label >Nhóm</label>
+                        <select name="groupOfCustomerId" class="form-select" id="groupOfCustomerId">
+                            {{!-- <option value="">Trống</option> --}}
+                            {{#each groupOfCustomerList}}
+                                <option value="{{this._id}}">{{this.name}}</option>
+                            {{/each}}
+                        </select>
+                        <script>
+                            $('#groupOfCustomerId').val('{{customer.groupOfCustomerId}}')
+                        </script>
+                    </div>
+                    <div class="form-group mb-3" >
+                       <label >Chi nhánh</label>
+                        <select name="branchId" class="form-select" id="branchId">
+                            {{!-- <option value="">Trống</option> --}}
+                            {{#each branchList}}
+                                <option value="{{this._id}}">{{this.name}}</option>
+                            {{/each}}
+                        </select>
+                        <script>
+                            $('#branchId').val('{{customer.branchId}}')
+                        </script>
+                    </div>
+                    <div class="form-group mb-3" >
+                        <label>Ghi chú</label>
+                       <textarea type="textarea" class="form-control" name="note">{{customer.note}}</textarea>
+                    </div>
+                   
+               </div>
+               
+                <div class="col-md-12">
+                     <button type="submit" name="save" value="save" class="btn btn-primary mr-3">Lưu</button>
+                      <a href="{{module_path}}" class="btn btn-danger mr-3">Hủy và quay lại</a>
+                </div>
+            </div>
+    </div>
+</form>

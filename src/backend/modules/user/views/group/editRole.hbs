@@ -1,0 +1,66 @@
+
+
+<form action="{{module_function_path}}/{{group._id}}/editRole?_method=PUT" method="POST">
+    <div class="container">
+           <div class="row">
+                <div class="col-md-12">
+                    <h4>Nhóm Admin</h4>
+                </div>
+                {{#each roleAdminList}}
+                    <div class="col-md-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="roles[]" value="{{this._id}}" id="f_{{this._id}}" {{checkboxPermi this._id ../groupRoleList}}>
+                            <label class="form-check-label" for="f_{{this._id}}">
+                              {{this.nameVi}} 
+                            </label>
+                        </div>
+                    </div>
+                {{else}}
+                        <li class="list-group-item text-center ">Trống</li>
+                {{/each}}
+                <hr>
+                {{!-- khach hàng  --}}
+                <div class="col-md-12  mt-3">
+                    <h4>Nhóm Khách hàng </h4>
+                </div>
+                {{#each roleCustomerList}}
+                    <div class="col-md-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="roles[]" value="{{this._id}}" id="f_{{this._id}}" {{checkboxPermi this._id ../groupRoleList}}>
+                            <label class="form-check-label" for="f_{{this._id}}">
+                              {{this.nameVi}} 
+                            </label>
+                        </div>
+                    </div>
+                {{else}}
+                        <li class="list-group-item text-center ">Trống</li>
+                {{/each}}
+
+                {{!-- dai ly  --}}
+                <div class="col-md-12 mt-3">
+                    <h4>Nhóm Đại lý </h4>
+                </div>
+                {{#each roleAgencyList}}
+                    <div class="col-md-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="roles[]" value="{{this._id}}" id="f_{{this._id}}" {{checkboxPermi this._id ../groupRoleList}}>
+                            <label class="form-check-label" for="f_{{this._id}}">
+                              {{this.nameVi}} 
+                            </label>
+                        </div>
+                    </div>
+                {{else}}
+                        <li class="list-group-item text-center ">Trống</li>
+                {{/each}}
+               
+               
+                <div class="col-md-12">
+                     <div class=" my-3">
+                        <button type="submit"  class="btn btn-primary mr-3">Lưu</button>
+                        <a class="btn btn-danger" href="{{module_function_path}}">Hủy và quay lại</a>
+                    </div>
+                </div>
+            </div>
+    </div>
+    
+</form>

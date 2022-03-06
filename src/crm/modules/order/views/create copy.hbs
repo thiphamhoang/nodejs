@@ -1,0 +1,352 @@
+<script>
+    $('#head').css('display','none');
+</script>
+ <div class="menuOrder bg-blue py-1">
+    <div class="container-fluid">
+        <div class="row">
+            {{!-- cot 1  --}}
+            <div class="col-8">
+                <div class="row">
+                    {{!-- tim kiem  --}}
+                    <div class="col-md-5">
+                        <div style="position: relative;">
+                            <div class="input-group">
+                                <input onkeyup="searchGoods()" type="text" placeholder="Tìm hàng hóa - dịch vụ" id="searchGoods" class="form-control" autocomplete="off">
+                                <span onclick="deleteSearchGoods()" class="input-group-text text-danger" id="delete-search-goods" style="cursor: pointer; display:none">X</span>
+                                <select id="feildSearchGoods" name="feild" style="width:100px !important;border: 1px solid #ced4da;">
+                                    <option value="name">Theo tên</option>
+                                    <option value="goodsCodeId">Theo mã </option>
+                                </select>
+                            </div>
+                            <ul id="searchResultGoods"  style="display:none" class="w-100"> </ul>
+                        </div>
+                    </div>
+                    {{!-- tab  --}}
+                    <div class="col-md-7">
+                        <div style="position: relative;">
+                            {{!-- tab hien tai  --}}
+                            <input type="hidden" id="tabCurrent" value="1">
+                        
+                            {{!-- nut them tab  --}}
+                            <span id="addTab" onclick="addTab()" class="text-white mt-2" style="cursor: pointer;position: absolute; right: -20px; border: 1px solid; padding: 0px 5px;"> <i class="fa fa-plus"></i></span>
+
+                            <ul class="nav nav-pills" id="pills-tab" role="tablist" style="font-size: 14px;">
+                                {{!-- foreach cac hoa dong tam  --}}
+                                {{#each orderTemList}}
+                                    
+                                    <input type="hidden" id="orderId_{{sum @index 1}}" value="{{this._id}}">
+
+                                    <li class="nav-item tabBill tabBill_{{sum @index 1}}" role="presentation">
+                                        <button onclick="selectTab('{{sum @index 1}}','{{this._id}}')" class="nav-link border {{ifEquals @index 0 'active' }} buttonTab buttonTab_{{sum @index 1}}" data-count="{{sum @index 1}}" id="pills-bill_{{sum @index 1}}-tab" data-bs-toggle="pill" data-bs-target="#pills-bill_{{sum @index 1}}" type="button" role="tab" aria-controls="pills-bill_{{sum @index 1}}" aria-selected="{{ifEqualsElse @index 0 'true' 'false' }}">
+                                            Hóa đơn <span class="orderTabTT">{{sum @index 1}}</span>
+                                            {{!-- input de them id tab --}}
+                                          
+                                            <span onclick="deteleTab('{{sum @index 1}}', '{{this._id}}')" class="ms-1 deleteTab text-danger" style="">X</span>
+                                     
+                                        </button>
+                                    </li>
+                                {{/each}}
+                               
+                            
+                            </ul>
+
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            {{!-- cot  --}}
+            <div class="col-4">
+                <div class="row justify-content-end">
+                    <div class="col-auto">
+                        {{!-- chi nhanh   --}}
+                        <select id="branchId" name="branchId" class="form-select form-select-sm mt-1">
+                            {{#each branchList}}
+                                <option value="{{this._id}}">{{this.name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        {{!-- in an   --}}
+                        <button type="button" class="btn btn-sm btn-primary mt-1 me-3"  data-bs-toggle="tooltip" data-bs-placement="top" title="In ấn">
+                            <i class="fa fa-print"  aria-hidden="true"></i> In ấn
+                        </button>
+                    </div>
+                    <div class="col-auto">
+                        <div class="dropdown">
+                            <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-align-justify" aria-hidden="true"></i>
+                            </a>
+
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
+                                <li><a class="dropdown-item" href="/crm/order">Danh sách đơn hàng</a></li>
+                                <li><a class="dropdown-item" href="#">Xem báo cáo</a></li>
+                                <li><a class="dropdown-item" href="#">Xử lý đơn hàng</a></li>
+                                <li><a class="dropdown-item" href="#">Lập phiếu thu</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    
+    {{!-- danh sach hang hoa  --}}
+    <div class="row bg-light">
+        <div class="col-md-8 bg-white">
+            {{!-- san pham da them  --}}
+            <div class="tab-content" id="pills-tabContent">
+                {{#each orderTemList}}
+                    <div class="tab-pane fade {{ifEquals @index 0 'show active' }} contentTab contentTab_{{sum @index 1}}" id="pills-bill_{{sum @index 1}}" role="tabpanel" aria-labelledby="pills-bill_{{sum @index 1}}-tab">
+                        <div class="order-item" style="min-height: 300px;">
+                            <table class="table table-striped table-hover" style="font-size: 14px;">
+                                <thead>
+                                    <tr>
+                                        {{!-- thu tu  --}}
+                                        <th scope="col" width="1%">  </th>
+                                        {{!-- xoa  --}}
+                                        <th scope="col" width="1%">   </th>
+                                        {{!-- ten  --}}
+                                        <th>  </th>
+                                        {{!-- thuoc tinh  --}}
+                                        <th scope="col" width="10%">  </th>
+                                        {{!-- so luong  --}}
+                                        <th>  </th>
+                                        {{!-- gia   --}}
+                                        <th >  </th>
+                                        {{!-- thanh tien --}}
+                                        <th >  </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="item-append item-append-{{sum @index 1}}">
+                                    {{#each this.items}}
+                                        <tr class="itemAdd itemTab_{{sum @../index 1}} itemAdd_{{sum @../index 1}}_{{sum @index 1}}">
+                                            {{!-- thu tu  --}}
+                                            <td class="col_tt_{{sum @../index 1}} col_ttItem_{{sum @index 1}}">  </td>
+                                            {{!-- xao  --}}
+                                               <td>  <span onclick="deleteIteam('{{sum @../index 1}}', '{{this.price}}','{{sum @index 1}}')" class="cursor"><i class="fa fa-trash"></i></span>  </td>
+                                              {{!-- // ten  --}}
+                                            <td><input type="text" name="name" id="nameItem_{{sum @../index 1}}_{{sum @index 1}}" class="nameItem noBorder" value="{{this.name}}" disabled></td>
+                                            {{!-- thuoc tinh  --}}
+                                            <td>  thuoc tinh  </td>
+                                             {{!-- //so luong  --}}
+                                            <td>
+                                                {{!-- //nut giam  --}}
+                                                <span onclick="down('{{sum @../index 1}}', '{{this.priceGoods}}','{{sum @index 1}}')" class="upCount cursorPoiter border me-2 p-1" ><i class="fa fa-chevron-down" aria-hidden="true"></i></span>
+                                                    <input onchange="changeCount('{{sum @../index 1}}', '{{this.price}}','{{sum @index 1}}')" id="countItem_{{sum @../index 1}}_{{sum @index 1}}" type="number" name="count" data-count="{{this.count}}" value="{{this.count}}" min="1" max="99999999">
+                                                    {{!-- //input id hoang hoa --}}
+                                                    <input id="IdItem_{{sum @../index 1}}_{{sum @index 1}}" type="hidden" name="idGoods" value="{{this.idGoods}}">
+                                                    
+                                                {{!-- //nut tang --}}
+                                                <span onclick="up('{{sum @../index 1}}', '{{this.priceGoods}}','{{sum @index 1}}')" class="upCount cursorPoiter border ms-2 p-1"><i class="fa fa-chevron-up" aria-hidden="true"></i></span>
+                                            </td>
+                                            {{!-- don gia  --}}
+                                            <td>
+                                                <input type="text" name="priceGoods" id="priceItem_{{sum @../index 1}}_{{sum @index 1}}" class="priceItem noBorder money text-end" value="{{this.priceGoods}}" disabled> đ
+                                            </td>
+                                            {{!-- thanh tien  --}}
+                                             <td>
+                                                 <input type="text" name="priceTotalCount" id="priceCountItem_{{sum @../index 1}}_{{sum @index 1}}"  class="priceCountItem noBorder money text-end" value="{{this.priceTotalCount}}" disabled> đ
+                                            </td>
+                                        </tr> 
+                                    {{/each}}
+                                </tbody>
+                                <script>
+                                        // sap xep lai bang item khi lay tu dataabay 
+                                        $($('.col_tt_{{sum @index 1}}').get().reverse()).each(function(i){
+                                            // thay doi so thu tu
+                                                var tt = i+1; 
+                                                $(this).html(tt);
+                                            // thay doi class 
+                                                $(this).attr('class','col_tt_{{sum @index 1}} col_ttItem_'+tt)
+                                        });
+                                </script>
+                            </table>
+
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+            <hr>
+            {{!-- san pham de lua chon  select item--}}
+            <div class="row" id="display-goods">
+                {{#each goodsList}}
+                    <div class="col-md-2 bg-light">
+                        <div onclick="selectItem('{{this._id}}','{{this.name}}','{{this.price}}','{{this.costPrice}}')"  class="mod-goods select-item mb-2" style="cursor: pointer;">
+                            <div class="mod-goods-price-img " style="position: relative;">
+                                <div class="mod-goods-price text-success" style="font-size:12px;  position:absolute;  bottom: 0; background-color: #fff;  z-index: 999;">
+                                    <span class="money">{{this.price}}</span> đ
+                                </div>
+                                <div class="mod-goods-img bg-light" style="margin: 0 auto; overflow: hidden; position: relative; height: 100px;">
+                                    {{#if this.img}}   
+                                        {{{firstImage this.img ../userId '' 'absolute h-100'}}} 
+                                    {{/if}}
+                                </div>
+                            </div>
+                            <div class="mod-goods-name text-center my-1 fw-bold" style="font-size:12px">
+                                {{this.name}}
+                            </div>
+                        </div>
+                    </div>
+                {{/each}}
+                
+                
+            </div>
+            
+            {{!-- phan trang  --}}
+            <div class="text-end">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-end" style="font-size: 12px; cursor:pointer">
+                        {{{paginationAjax TotalCount itemPerPageDefault}}}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        {{!-- khach hang  --}}
+        <div class="col-md-4">
+            <div class="tab-content-price">
+                    {{!-- tim khach hàng  --}}
+                        <div class="search-customer mt-3" style="position: relative;">
+                            <div>
+                                <div class="input-group input-group-sm">
+                                    {{!-- truong tim kiem  --}}
+                                    <input onkeyup="searchKey()" type="text" placeholder="Tìm kiếm khách hàng" id="search" class="form-control" name="key" value="{{key}}" autocomplete="off">
+                                    
+                                    <span onclick="deleteSearch()" class="input-group-text text-danger" id="delete-search" style="display:none;cursor: pointer;">X</span>
+                                    <select onchange="changeFieldSearch()" id="feildSearch" name="feild" style="width:100px !important;border: 1px solid #ced4da; font-size:14px">
+                                        <option value="name">Theo tên</option>
+                                        <option value="code">Theo mã </option>
+                                        <option value="email">Email </option>
+                                        <option value="phone_1">Số điện thoại 1</option>
+                                        <option value="phone_2">Số điện thoại 2</option>
+                                    </select>
+                                    <script>
+                                        if('{{feild}}'){
+                                            $('#feildSearch').val('{{feild}}');
+                                        }
+                                    </script>
+                                </div>
+                                <ul id="searchResult"  style="display:none" class="w-100"> </ul>
+                            </div>
+                        </div>
+                {{#each orderTemList}}
+                   
+                    <div class="contentTabPrice contentTabPrice_{{sum @index 1}}" style="{{ifBigger @index 0 'display:none' }}">
+                        
+                        {{!-- thong tin thanh toan  --}}
+                        <div class="mt-3">
+                            {{!-- userID la nhan vien dang nhap tao don hang  --}}
+                            <input type="hidden" name="creatorId" id="creatorId" value="{{../userId}}">
+                            {{!-- cusomterid  id khach hang mua --}}
+                                <input type="hidden" name="customerId" id="customerId_{{sum @index 1}}">
+                            {{!-- tong tien  --}}
+                            <div class="row rowBill">
+                                <hr>
+                                <div class="col-6">Tổng tiền hàng  </div>
+                                <div class="col-6 text-end">
+                                    <span id="totalPrice_html_{{sum @index 1}}" class="money">{{this.totalPrice}}</span> đ
+                                    <input type="hidden" name="totalPrice" value="{{this.totalPrice}}" id="totalPrice_{{sum @index 1}}">
+                                </div>
+                            </div>
+                            {{!-- giam gia  --}}
+                            <div class="row cursor rowBill" >
+                                <div class="col-5">
+                                    Giảm giá
+                                    <select onchange="changeUnitSalePrice('{{sum @index 1}}')" id="selectUnitSaleOff_{{sum @index 1}}" class="formatNumber">
+                                        <option value="vnd">VND</option>
+                                        <option value="percent">%</option>
+                                    </select>    
+                                    
+                                </div>
+                                
+                                <div class="col-7 text-end">
+                                    <input class="text-end" type="number" onkeyup="changeUnitPercentSalePrice('{{sum @index 1}}')" name="salesOffPercent" value="{{this.SaleOffPricePercent}}" id="SaleOffPrice_percent_{{sum @index 1}}" style="width:60px;display:none">  <span id="unitSalePricePercent_{{sum @index 1}}" style="display:none">%</span>
+                                    <input class="text-end money" type="text" onkeyup="changeSalePrice('{{sum @index 1}}')" name="salesOff" value="{{this.salesOff}}" id="SaleOffPrice_{{sum @index 1}}" style="width:140px"> <span>đ</span>
+                                </div>
+                                <script>
+                                      $('#selectUnitSaleOff_{{sum @index 1}}').val('{{this.unitSaleOff}}');
+                                        var unitSaleOff = '{{this.unitSaleOff}}';
+                                        if(unitSaleOff == 'percent'){
+                                            $('#SaleOffPrice_percent_{{sum @index 1}}').css('display','');
+                                            $('#unitSalePricePercent_{{sum @index 1}}').css('display','');
+                                            $('#SaleOffPrice_{{sum @index 1}}').attr('disabled','disabled');
+                                        }else if(unitSaleOff == 'vnd'){
+                                             $('#SaleOffPrice_percent_{{sum @index 1}}').css('display','none');
+                                             $('#unitSalePricePercent_{{sum @index 1}}').css('display','none');
+                                        }
+                                </script>
+                            </div>
+                            {{!-- thu khac  --}}
+                            <div class="row  rowBill">
+                                <div class="col-6">
+                                    Thu khác 
+                                    <select onchange="changeUnitPriceOther('{{sum @index 1}}')" id="selectPriceOther_{{sum @index 1}}" style="width:60px">
+                                        <option value="0" data-type="other">Đổi</option>
+                                        {{#each ../priceOtherList}}
+                                            <option value="{{this._id}}" data-value="{{this.value}}" data-type="{{this.type}}">{{this.name}}: {{this.valueName}} {{this.typeIcon}}</option>
+                                        {{/each}}
+                                    </select>  
+                                    
+                                </div>
+                                <div class="col-6 text-end ">
+                                    <span id="OtherPrice_percent_{{sum @index 1}}" style="display:none">{{this.priceOtherTypePercent}}</span><span id="UnitOtherPrice_percent_{{sum @index 1}}" style="display:none">%</span>
+                                    <input class="text-end money" onkeyup="changePriceOther('{{sum @index 1}}')" type="text" name="priceOther" value="{{this.priceOther}}" id="OtherPrice_{{sum @index 1}}" style="width:140px"> <span>đ</span>
+                                </div>
+                                <script>
+                                        $('#selectPriceOther_{{sum @index 1}}').val('{{this.priceOtherid}}');
+
+                                        var priceOtherType = '{{this.priceOtherType}}';
+                                        if(priceOtherType == 'percent'){
+                                            $('#OtherPrice_percent_{{sum @index 1}}').css('display','');
+                                            $('#UnitOtherPrice_percent_{{sum @index 1}}').css('display','');
+                                        }else if(priceOtherType == 'vnd'){
+                                            $('#OtherPrice_percent_{{sum @index 1}}').css('display','none');
+                                            $('#UnitOtherPrice_percent_{{sum @index 1}}').css('display','none');
+                                            $('#OtherPrice_{{sum @index 1}}').attr('disabled','disabled');
+                                        }
+                                </script>
+                            </div>
+                            {{!-- Khach can tra  --}}
+                            <div class="row  rowBill">
+                                <div class="col-6">Khách trần trả</div>
+                                <div class="col-6 text-end">
+                                    <span id="customerNeedPay_html_{{sum @index 1}}" class="money">{{this.customerNeedPay}}</span> đ
+                                    <input type="hidden" name="customerNeedPay" value="0" id="customerNeedPay_{{sum @index 1}}">
+                                </div>
+                            </div>
+                            {{!-- Khach can dua tien   --}}
+                            <div class="row  rowBill">
+                                <div class="col-6">Khách thanh toán</div>
+                                <div class="col-6 text-end">
+                                
+                                    <input onkeyup="customerPayed('{{sum @index 1}}')" class="text-end money" type="text" name="customerPay" value="{{this.customerPay}}" id="customerPay_{{sum @index 1}}" style="width:140px"> đ
+                                </div>
+                            </div>
+                            {{!-- Khach can dua tien   --}}
+                            <div class="row rowBill">
+                                <div class="col-6">Tiền thừa trả lại</div>
+                                <div class="col-6 text-end">
+                                    <span id="excessCash_html_{{sum @index 1}}">0</span> đ
+                                    <input type="hidden" name="excessCash" value="0" id="excessCash_{{sum @index 1}}">
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <div class="col-12 text-end">(Hóa đơn {{sum @index 1}})</div>
+                            </div>
+                            {{!-- luu  --}}
+                            <div class="row mb-1">
+                                <div class="col-12 text-center">
+                                    <hr>
+                                    <button onclick="orderSubmit({{sum @index 1}})" class="btn btn-lg btn-success w-50">Đặt hàng</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</div>

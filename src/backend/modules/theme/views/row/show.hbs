@@ -1,0 +1,282 @@
+<div class="container-fluid">
+    <div class="row">
+        {{!-- danh sach vi tri menu  --}}
+        <div class="col-3">
+            <div class="">
+                
+                <ul class="list-group">
+                    <li class="list-group-item text-center fw-bold">
+                        Danh sách hàng
+                    </li>
+                    
+                    {{#each rowList}}
+                        <li class="list-group-item d-flex justify-content-between align-items-start class_{{this._id}}">
+                            <div class="ms-2 me-auto">
+                                <a href="{{../module_function_path}}/{{../idTheme}}/{{../function_sub_name}}/{{this._id}}/feild" class="text-dark">
+                                    {{this.name}} 
+                                </a>
+                            </div>
+                            
+                            {{{ifStatusDipay this.status}}}
+                            <span class="badge bg-primary rounded-pill me-1" style="font-weight: 400!important;">
+                                 <a href="{{../module_function_path}}/{{../idTheme}}/{{../function_sub_name}}/{{this._id}}/edit" class="text-white">Sửa</a>
+                            </span>
+                            {{!-- <span class="badge bg-danger rounded-pill" style="font-weight: 400!important;">
+                                 <a href=""  class="text-white">Xóa</a>
+                            </span> --}}
+                        </li>
+                    {{else}}
+                         <li class="list-group-item text-center ">Trống</li>
+                    {{/each}}
+                    <script>
+                        $('.class_{{menuLocal._id}}').addClass('list-group-item-primary')
+                    </script>
+
+                    <li class="list-group-item text-center bg-primary">
+                        <a href="{{module_function_path}}/{{idTheme}}/{{function_sub_name}}/create" class=" text-white">Thêm hàng</a>
+                    </li>
+                </ul>
+            </div>
+        </div>  
+        <div class="col-9">
+            {{#if row._id}}
+                <h5>{{module_name}}: {{menuLocal.name}}</h5>
+                {{!-- them truong  --}}
+                <span class="me-2">
+                    <a href="{{module_function_path}}/{{idTheme}}/{{function_sub_name}}/{{row._id}}/feild/create" class="btn btn-sm btn-primary">
+                       <i class="fa fa-plus"></i> Thêm trường
+                    </a>
+                </span>
+                {{!-- sua truong  --}}
+                <span class="me-2">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-edit"></i> Sửa trường
+                        </button>
+
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            {{#each row.feild}}
+                                <li><a class="dropdown-item" href="{{../module_function_path}}/{{../idTheme}}/{{../function_sub_name}}/{{../row._id}}/{{../function_sub_sub_name}}/{{this._id}}/edit">{{this.title}}</a></li>        
+                            {{/each}}
+                            
+                        </ul>
+                    </div>
+                </span>
+                {{!-- xoa truong  --}}
+                <span class="me-2">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-trash"></i> xóa trường
+                        </button>
+
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            {{#each row.feild}}
+                                <li>
+                                    <a class="dropdown-item btnDeleteFeild" href="#" data-name="{{this.name}}"  data-id="{{this._id}}" >
+                                         <span class="text-danger">x</span> {{this.title}}
+                                    </a>
+                                </li>        
+                            {{/each}}
+                            
+                        </ul>
+                          {{!-- form an xoa feild --}}
+                            <form name="btn-feild-delete"  method="POST" >
+                            </form>
+                        {{!-- js xoa  feild  --}}
+                        <script>
+                            $('.btnDeleteFeild').click(function(){
+                                if (confirm('Bạn có chắc chắn muốn xóa trường, sau khi xóa trường các giá trị của trường sẽ mất vĩnh viễn')) {
+                                     var idFeild = this.getAttribute('data-id');
+                                    var btnFeildDelete =  document.forms['btn-feild-delete'];
+                                    var url = '{{module_function_path}}/{{idTheme}}/row/{{idRow}}/feild/'+idFeild+'/force?_method=DELETE'
+                                 
+                                     btnFeildDelete.action = url;
+                                     btnFeildDelete.submit();
+                                }
+                            });
+
+                        </script>
+
+                    </div>
+                </span>
+            {{!-- xoa toan bo hang  --}}
+                <span class="me-2">
+                    <a  class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteRowModal">
+                        <i class="fa fa-trash"></i> Xóa toàn bộ hàng
+                    </a>
+                </span>
+                 <!-- Modal xoa oww-->
+                        <div class="modal fade" id="deleteRowModal" tabindex="-1" aria-labelledby="deleteRowModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteRowModalLabel">Xóa vĩnh viễn hàng</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Tên hàng: {{row.name}}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                        <form action="{{module_function_path}}/{{idTheme}}/{{function_sub_name}}/{{row._id}}/force?_method=DELETE" method="POST" >
+                                                <button type="submit" class="btn btn-danger" >Ok xóa </button>
+                                        </form>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
+                <hr>
+                <div class="">
+                    <form action="{{module_function_path}}/{{idTheme}}/{{function_sub_name}}/{{row._id}}/feild?_method=PUT" method="POST">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="inputFeild">
+                                            {{#each row.feild}} 
+                                                {{#if this.type}}
+                                                    <label >{{this.title}}</label>
+                                                    <div class="form-group mb-3">
+                                                        {{!-- partial dong , lay tu hepper --}}
+                                                        {{> (dynamicFeild this.type) }}
+                                                        {{#ifOtherHtml this.type 'image'}} 
+                                                            <input type="hidden" name="feild[{{sum @index 0}}][id]" value="{{../this._id}}" class="form-control" >
+                                                            <input type="hidden" name="feild[{{sum @index 0}}][type]" value="{{../this.type}}" class="form-control" >
+                                                        {{/ifOtherHtml}}
+                                                    </div>
+                                                {{/if}}
+                                                    
+                                            {{/each}}
+
+                                          
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Lưu</button>
+                    </form>
+                    {{!-- style upload anh  --}}
+                    <style>
+                            .btn-delete-img-priview {
+                                position: absolute;
+                                z-index: 10;
+                                left: 0;
+                                background-color: #f0f0f0;
+                                padding: 0px 2px;
+                                border-radius: 3px;
+                                cursor: pointer;
+                            }
+                            .mod-preview {
+                                position: relative;
+                            }
+                    </style>
+                     {{!-- form an xoa anh trong feil --}}
+                    <form name="btn-delete-img-priview"  method="POST" >
+                    </form>
+                    {{!-- js xoa  feild  --}}
+                    <script>
+                        $('.btn-delete-img-priview').click(function(){
+                            if (confirm('Bạn có chắc chắn muốn xóa ảnh')) {
+                                var idFeild = this.getAttribute('data-feildId');
+                                var name_img = this.getAttribute('data-name');
+                                var btnFeildDelete =  document.forms['btn-delete-img-priview'];
+                                var url = '{{module_function_path}}/{{idTheme}}/row/{{idRow}}/feild/'+idFeild+'/'+name_img+'/force?_method=DELETE'
+                                
+                                btnFeildDelete.action = url;
+                                btnFeildDelete.submit();
+                            }
+                        });
+
+                    </script>
+
+                    {{!-- model upload hinh anh  --}}
+                    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="uploadModalLabel">Trình tải ảnh </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Trường: <span class="name_feild"></span>
+
+                                    <form id="form-upload-img" action="" method="POST" enctype="multipart/form-data">
+                                        <input type="hidden" name="feildId" id="feildId" class="form-control" >
+                                        <input type="hidden" name="rowId" id="rowId" class="form-control" >
+                                        <input type="file" id="imgInp" name="multiFiles"  multiple  class="form-control" >
+ 
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                            <button type="submit" class="btn btn-primary" id="btn-delete-soft">Upload hình ảnh</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <script >
+                        //chuyen thong tin len model tai anh 
+                        var  uploadModal = document.getElementById('uploadModal');
+                        var  imgInp =  document.getElementById('imgInp');
+                        var  formUploadImage =  document.getElementById('form-upload-img');
+            
+                        uploadModal.addEventListener('show.bs.modal', function (event) {
+                            // Button that triggered the modal
+                            var button = event.relatedTarget
+                            
+                            var id = button.getAttribute('data-id');
+                            var name = button.getAttribute('data-name'); 
+                            $('.name_feild').html(name);
+                             $('#rowId').val('{{idRow}}');
+                            $('#feildId').val(id);
+                              //xoa anh cu o input khac 
+                            imgInp .value = '';
+                            //tao action form 
+                            formUploadImage.action = '{{module_function_path}}/{{idTheme}}/row/{{idRow}}/feild/'+id+'/uploadImage'
+                        });
+                    </script>
+                </div>
+                <hr>
+            
+                <script>
+                        // sap sep thu tu 
+                        $(document).ready(function () {
+                            var updateOutput = function (e) {
+                        
+                                var list = e.length ? e : $(e.target),
+                                    output = list.data('output');
+
+                                var menuLocal_id = '{{menuLocal._id}}';
+                                $.ajax({
+                                    method: "POST",
+                                    url: '{{module_function_path}}' + menuLocal_id + '/menuList/order',
+                                    data: {
+                                        list: list.nestable('serialize'),
+                                    
+                                    }
+                                }).fail(function (jqXHR, textStatus, errorThrown) {
+                                    alert("Unable to save new list order: " + errorThrown);
+                                });
+                            };
+
+                            $('.dd').nestable({
+                                group: 1,
+                                maxDepth: 7,
+                            }).on('change', updateOutput);
+                        });
+
+                </script>
+        
+        
+
+               
+            {{else}}
+
+            {{/if}}
+
+        </div>
+    </div>
+</div>
+

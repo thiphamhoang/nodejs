@@ -1,0 +1,21 @@
+tinymce.addI18n('vi_VN', {
+    'Icons': 'Icon',
+    'Web Application': 'Ứng dụng web',
+    'File Type': 'Tệp văn bản',
+    'Spinner': 'Đang tải',
+    'Form Control': 'Biểu mẫu',
+    'Currency': 'Tiền tệ',
+    'Text Editor': 'Chỉnh sửa văn bản',
+    'Directional': 'Thư mục',
+    'Video Player': 'Video',
+    'Brand': 'Thương hiệu',
+    'Medical': 'Y tế',
+    'Transportation': 'Vận tải',
+    'Gender': 'Giới tính',
+    'Payment': 'Thanh toán',
+    'Chart': 'Biểu đồ',
+    'Hand': 'Bàn tay',
+    'Search': 'Tìm kiếm',
+    'Accessibility': 'Người khuyết tật',
+    'No icons matched your search': 'Không tìm thấy icon'
+});

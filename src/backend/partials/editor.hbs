@@ -1,0 +1,41 @@
+
+    <textarea type="textarea" id="editor_{{this.id}}" name="feild[{{@index}}][value]" class="form-control" >{{this.value}}</textarea>
+    
+    <script>
+        tinymce.init({
+            editor_selector : "mceEditor",
+            selector: '#editor_{{this.id}}',height: 500,
+            relative_urls:false,
+            extended_valid_elements: 'script[language|type|src]',
+
+            toolbar1: "undo redo | insert | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | styleselect",
+            toolbar2: " image media | textAmiSlide textUpload textCol | fontsizeselect | link unlink anchor | forecolor backcolor  | print preview code emoticons | webux_upload",
+
+            powerpaste_allow_local_images: true,
+            powerpaste_word_import: true,
+            powerpaste_html_import: 'prompt',
+            paste_data_images: true,
+            image_advtab: true ,
+            language: 'vi_VN',
+            font_formats: 'Arial Black=arial black,avant garde;Indie Flower=indie flower, cursive;Times New Roman=times new roman,times;',
+
+            plugins: [
+                    "image advlist autolink link image lists charmap print preview hr anchor pagebreak",
+                    "searchreplace wordcount visualblocks visualchars insertdatetime media nonbreaking fullscreen",
+                    "table contextmenu directionality emoticons paste textcolor  code noneditable code"
+            ],
+        
+            contextmenu: "paste copy cut | image | inserttable | bold italic | fontsizes | align | removeformat | link unlink",
+            table_default_attributes: {
+                class: 'mac_dinh'
+            },
+            rel_list: [
+                {title: 'follow', value: 'follow'},
+                {title: 'nofollow', value: 'nofollow'}
+                ],
+            image_advtab: true,
+            fontsize_formats: '8pt 9pt 10pt 11pt 12pt 13p 14px 15pt 16pt 17pt 18pt 19pt 20pt 21pt 22pt 23pt 24pt',
+            
+        });
+
+    </script>

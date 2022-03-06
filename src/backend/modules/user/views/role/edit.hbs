@@ -1,0 +1,44 @@
+
+
+<form action="/admin/{{folder_module}}/role/{{role._id}}?_method=PUT" method="POST">
+    <div class="container">
+           <div class="row">
+               <div class="col-md-6">
+                   <!-- ten  -->
+                    <div class="form-group mb-3">
+                        <label for="name_cat">Tên quyền (tiếng việt)</label>
+                        <input type="text" class="form-control" value="{{role.nameVi}}" placeholder="Bạn điền tên {{module_name}}" name="nameVi" >
+                    </div>
+             
+                    <div class="form-group mb-3">
+                        <label >Quyền (viết tiếng anh)</label>
+                        <input type="text" class="form-control" value="{{role.name}}" name="name" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label >Mô tả</label>
+                        <input type="text" class="form-control" value="{{role.des}}" name="des">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label >Loại</label>
+                        <select name="type" class="form-select" required>
+                            <option value="admin" {{ifEquals role.type 'admin' 'selected'}}>Admin</option>
+                            <option value="agency" {{ifEquals role.type 'agency' 'selected'}}>Agency</option>
+                            <option value="customer" {{ifEquals role.type 'customer' 'selected'}}>Khách hàng</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="name_cat_seo">Trạng thái</label>
+                        <select name="status" class="form-select" required>
+                            <option value="on" {{ifEquals role.status 'on' 'selected'}}>Công khai</option>
+                            <option value="off" {{ifEquals role.status 'off' 'selected'}}>Khóa</option>
+                        </select>
+                    </div>
+                    <div class=" my-3">
+                        <button type="submit"  class="btn btn-primary mr-3">Lưu</button>
+                        <a class="btn btn-danger" href="{{module_function_path}}">Hủy và quay lại</a>
+                    </div>
+               </div>
+            </div>
+    </div>
+    
+</form>

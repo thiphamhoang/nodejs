@@ -1,0 +1,47 @@
+ {{!-- loai hang hoa  --}}
+    <div class="sidebar sidebar_brand  mb-3">
+        <div class="accordion" id="accordionBrand">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="S_brand">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_brand" aria-expanded="true" aria-controls="collapse_brand">
+                    Thương hiệu
+                </button>
+                </h2>
+                <div id="collapse_brand" class="accordion-collapse collapse show" aria-labelledby="S_brand" data-bs-parent="#accordionBrand">
+                    <div class="accordion-body">
+                      
+                        {{#each brandList}}
+                            <div class="form-check">
+                                <input class="form-check-input checkbox_brand" type="checkbox" name="brand[]" value="{{this._id}}" id="checkbox_filter_group_{{this._id}}" checked>
+                                <label class="form-check-label" for="checkbox_filter_group_{{this._id}}">
+                                    {{this.name}}
+                                </label>
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+    </div>
+    {{!-- script bo loc  --}}
+    <script>
+        var formFilter = $('#form-filter');
+        var checkbox_brand = $('.checkbox_brand');
+        checkbox_brand.change(function(){
+            formFilter.action = 'action="{{module_path}}"'
+            formFilter.submit();
+        });
+        var filterValue = '{{filter.brandId}}';
+        //checkbox cac gia tri da chon
+        var filterValueSlit = filterValue.split(",");
+         //bo check tat ca 
+        if(filterValueSlit){
+            $('.checkbox_brand').prop('checked',false)
+        }
+        var i;
+        for (i = 0; i < filterValueSlit.length; i++) {
+            document.getElementById('checkbox_filter_group_'+filterValueSlit[i]).checked = true;
+        } 
+        
+    </script>

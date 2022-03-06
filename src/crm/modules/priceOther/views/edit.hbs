@@ -1,0 +1,58 @@
+
+
+<form action="{{module_path}}/{{item._id}}?_method=PUT" method="POST">
+    <div class="container">
+           <div class="row">
+               <div class="col-md-6">
+                   <!-- ten danh muc -->
+                    <div class="form-group mb-3">
+                        <label for="name_cat">Tên {{module_name}}</label>
+                        <input type="text" class="form-control" id="name" value="{{item.name}}" name="name" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label >Loại thu</label>
+                        <select name="type" class="form-select" id="type">
+                            <option value="vnd">Mệnh giá (VND)</option>
+                            <option value="percent">Phần trăm (%)</option>
+                        </select>
+                         <input type="hidden" class="form-control" name="typeIcon" value="{{item.typeIcon}}" id="typeIcon">
+                        <script>
+                            $('#type').val('{{item.type}}')
+                        
+                            $('#type').change(function(){
+                                var type =  $('#type').val();
+                                if(type == 'vnd'){
+                                    $('#typeIcon').val('đ');
+                                }else if(type == 'percent'){
+                                    $('#typeIcon').val('%');
+                                }
+                            });
+                                
+                        </script>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label >Tên {{module_name}}</label>
+                        <input type="text" class="form-control" name="valueName" value="{{item.valueName}}" id="valueName">
+                        <input type="hidden" class="form-control" name="value" value="{{item.value}}" id="value" >
+                        <script>
+                            function FN(number){
+                                return parseInt( number.replace(/[^0-9.]/g, ""));
+                            }
+                            $('#valueName').keyup(function(){
+                                var value = $('#valueName').val();
+                                $('#value').val(FN(value));
+                                $('#valueName').simpleMoneyFormat();
+                               
+                            })
+                        </script>
+                    </div>
+                    
+               </div>
+               
+                <div class="col-md-12">
+                     <button type="submit" name="save" value="save" class="btn btn-primary mr-3">Lưu</button>
+                      <a href="{{module_path}}" class="btn btn-danger mr-3">Hủy và quay lại</a>
+                </div>
+            </div>
+    </div>
+</form>

@@ -1,0 +1,350 @@
+
+
+<form action="{{module_path}}/{{goods._id}}/update/{{typeOfGoods}}?_method=PUT" method="POST" enctype="multipart/form-data">
+{{!-- nhomg hang hoa  --}}
+    <input type="hidden" name="typeOfGoodsId" value="{{typeOfGoods}}">
+    <div class="container">
+           <div class="row">
+               <div class="col-md-4">
+                   <!-- ma hang hoa -->
+                    <div class="form-group mb-3">
+                        <label>Mã hàng hóa</label>
+                        <select class="form-select form-select-sm" name="goodsCodeId" id="goodsCodeId">
+                            <option value="">Trống </option>
+                            {{#each goodsCodeList}}
+                                <option value="{{this.name}}"> {{this.name}}</option>
+                            {{/each}}
+                        </select>
+                        <script>
+                            $('#goodsCodeId').val('{{goods.goodsCodeId}}')
+                        </script>
+                     </div>
+                      <!-- ma vach -->
+                    <div class="form-group mb-3">
+                        <label>Mã vạch</label>
+                        <input type="text" class="form-control form-control-sm" name="barcode" value="{{goods.barcode}}">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="fw-bold">Tên {{typeOfGoods_name}}</label>
+                        <input type="text" class="form-control form-control-sm" name="name" value="{{goods.name}}" required>
+                    </div>
+                    {{!-- nhóm hàng  --}}
+                    <div class="form-group mb-3">
+                        <label>Nhóm hàng hóa</label>
+                        <select class="form-select form-select-sm" name="groupOfGoodsId" id="groupOfGoodsId">
+                            <option value="">Trống </option>
+                            {{#each groupOfGoodsList}}
+                                <option value="{{this._id}}"> {{this.name}}</option>
+                            {{/each}}
+                        </select>
+                        <script>
+                            $('#groupOfGoodsId').val('{{goods.groupOfGoodsId}}')
+                        </script>
+                    </div>
+                    {{!-- thuong hieu  --}}
+                    <div class="form-group mb-3">
+                        <label>Thương hiệu</label>
+                        <select class="form-select form-select-sm" name="brandId" id="brandId">
+                            <option value="">Trống </option>
+                            {{#each brandList}}
+                                <option value="{{this._id}}"> {{this.name}}</option>
+                            {{/each}}
+                        </select>
+                        <script>
+                            $('#brandId').val('{{goods.brandId}}')
+                        </script>
+                    </div>
+                    {{!-- hinh anh  --}}
+                    <div class="mb-3">
+                        <label  >Ảnh đại diện</label>
+                        <input class="form-control form-control-sm" name="multi-files" type="file"  multiple>
+                        {{!-- anh cu  --}}
+                        <div class="mt-2">
+                            {{#each goods.img}}
+                                <span class="mod-preview name_{{@index}}">
+                                    <img src="/img/goods/{{this}}" class="me-2 mb-2" height="60px" width="auto">
+                                    <input type="hidden" name="img[]"  value="{{this}}">
+                                    <span class="text-danger btn-delete-img-preview" data-key="{{@index}}" data-name="{{this}}" >Xóa</span>
+                                </span>
+                                {{!-- xoa anh  --}}
+                                
+                            {{/each}}
+                            <script>
+                                    //router.delete('/:id/deleteImg/:imgName', Controller.imageDestroy);
+                                    $('.btn-delete-img-preview').click(function(){
+                                        if (confirm('Bạn có chắc chắn muốn xóa ảnh, sau khi xóa ảnh sẽ mất vĩnh viễn')) {
+                                            var name = $(this).attr('data-name');
+                                            var key = $(this).attr('data-key');
+                                            $.get("/crm/goods/{{goods._id}}/deleteImg/"+name , function(data, status){
+                                                $('.name_'+key).remove();
+                                                alert(data);
+                                            });
+                                        }
+                                    })
+                                        
+                            </script>
+                        </div>
+                          <style>
+                                .btn-delete-img-preview {
+                                    position: absolute;
+                                    z-index: 10;
+                                    left: 0;
+                                    background-color: #f0f0f0;
+                                    padding: 0px 2px;
+                                    border-radius: 3px;
+                                    cursor: pointer;
+                                }
+                                .mod-preview {
+                                    position: relative;
+                                }
+                        </style>
+                    </div>
+                     {{!-- ban truc tiep  --}}
+                    <div class="form-group mb-3">
+                        <label>Trạng thái kinh doanh</label>
+                        <select class="form-select form-select-sm" name="salesStatus" id="salesStatus">
+                            <option value="on">Đang kinh doanh</option>
+                            <option value="off">Ngừng kinh doanh</option>
+                        </select>
+                    </div>
+                    <script>
+                        $('#salesStatus').val('{{goods.salesStatus}}')
+                    </script>
+                </div>
+                <div class="col-md-4">
+                   <div class="form-group mb-3">
+                        <label>Giá vốn</label>
+                        <input type="number" min="0" max="99999999999" value="{{goods.costPrice}}" class="form-control form-control-sm" name="costPrice">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Giá bán</label>
+                        <input type="number" min="0" max="99999999999" value="{{goods.price}}" class="form-control form-control-sm" name="price">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Tồn kho</label>
+                        <input type="number" min="0" max="99999999999" value="{{goods.inventoryCount}}" class="form-control form-control-sm" name="inventoryCount">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Trọng lượng</label>
+                        <input type="number" min="0" max="99999999999" value="{{goods.weight}}" class="form-control form-control-sm" name="weight">
+                    </div>
+                    {{!-- ban truc tiep  --}}
+                    <div class="form-group mb-3">
+                        <label>Bán trực tiếp</label>
+                        <select class="form-select form-select-sm" name="directSales" id="directSales">
+                            <option value="off">Không bán trực tiếp </option>
+                            <option value="on">Bán trực tiếp</option>
+                        </select>
+                        <script>
+                            $('#directSales').val('{{goods.directSales}}')
+                        </script>
+                    </div>
+                     {{!-- ban truc tiep  --}}
+                    <div class="form-group mb-3">
+                        <label>Tích điểm</label>
+                        <select class="form-select form-select-sm" name="earnPoints" id="earnPoints">
+                            <option value="off">Không tích điểm </option>
+                            <option value="on">Tích điểm</option>
+                        </select>
+                        <script>
+                            $('#earnPoints').val('{{goods.earnPoints}}')
+                        </script>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Nổi bật</label>
+                        <select class="form-select form-select-sm" name="hot" id="hot">
+                            <option value="off">Không </option>
+                            <option value="on">Có</option>
+                        </select>
+                        <script>
+                            $('#hot').val('{{goods.hot}}')
+                        </script>
+                     </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group mb-3">
+                        <label>Mô tả</label>
+                        <textarea name="description" class="form-control">{{goods.description}}</textarea>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Ghi chú</label>
+                        <textarea name="note" class="form-control">{{goods.note}}</textarea>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Sản phẩm bán kèm</label>
+                        <div id="goodsSelectedValue">
+                            {{#each goods.combo}}
+                                <div class="modCombo modCombo_{{@index}}">
+                                    <span class="delete-goode-selected" data-count="{{@index}}"><i class="fa fa-trash text-danger" style="cursor:pointer"></i> </span>
+                                    <input type="hidden" name="combo[]" value="{{this._id}}">
+                                    <label>{{this.name}}</label>
+                                </div>
+                            {{/each}}
+                        </div>
+                        <div id="goodsSelected">
+                        </div>
+                        <div id="form-search">
+                            <div class="input-group input-group-sm">
+                                <input type="text" placeholder="Tìm kiếm theo tên hoặc theo mã hàng" id="search" class="form-control" name="key" value="{{key}}" autocomplete="off">
+                                <span class="input-group-text text-danger" id="delete-search" style="display:none; cursor: pointer;">X</span>
+                            </div>
+                            <div>
+                                <ul id="searchResult" style="display:none"> </ul>
+                            </div>
+                        </div>
+                         <script>
+                           
+                            $('#search').keyup(function(){
+                                var key = $(this).val();
+                                if(key != ''){
+                                    $.get("/crm/goods/searchAjax?key="+key+"&feild=name" , function(data, status){
+                                        $('#searchResult').css('display','');
+                                        $('#delete-search').css('display','');
+                                        $('#searchResult').html(data);
+                                    });
+                                }else{
+                                    $('#delete-search').css('display','none');
+                                    $('#searchResult').css('display','none');
+                                }
+
+                                
+                            });
+                            //chon tim kiem
+                                $('#searchResult').on('click','.liSearch',function(){
+                                    var id = $(this).attr('data-id');
+                                    var name = $(this).attr('data-key');
+                                    var count = $('.modCombo').length;
+
+                                    $('#goodsSelected').append('<div class="modCombo modCombo_'+count+'">'+
+                                        '<span class="delete-goode-selected" data-count="'+count+'"><i class="fa fa-trash text-danger" style="cursor:pointer"></i> </span>'+
+                                        '<input type="hidden" name="combo[]" value="'+id+'">'+
+                                        '<label>'+name+'</label>'+
+                                        '</div>');
+                                    $(this).remove();
+                                 
+                                });
+                            //xoa search
+                                $('#delete-search').click(function(){
+                                    $('#search').val('');
+                                    $('#searchResult').css('display','none');
+                                    $('#delete-search').css('display','none');
+                                   
+                                });
+                            //xoa lua chon
+                            $('#goodsSelected').on('click','.delete-goode-selected',function(){
+                                var count = $(this).attr('data-count');
+                                $('.modCombo_'+count).remove();
+                            });
+                            // xoa lua cho cu gia tri cu
+                          
+                            $('#goodsSelectedValue').on('click','.delete-goode-selected',function(){
+                                var count = $(this).attr('data-count');
+                                $('.modCombo_'+count).remove();
+                            });
+                        </script>
+                        <style>
+                            #form-search {
+                                position: relative;
+                            }
+                            ul#searchResult {
+                                position: absolute;
+                                background-color: #fff;
+                                z-index: 999;
+                                width: 100%;
+                                list-style: none;
+                                border: 1px solid #ced4da;
+                                border-radius: 0px 0px 3px 3px;
+                                padding-left: 0px;
+                            }
+                            ul#searchResult li {
+                                border-bottom: 1px solid #ced4da;
+                                padding: 6px 10px 6px 10px;
+                                cursor: pointer;
+                            }
+                            .modCombo {
+                                border-bottom: 1px solid #ced4da;
+                                padding: 5px;
+                            }
+                        </style>
+                    </div>
+                </div>
+                {{!-- thuoc tinh va don vi  --}}
+                <div class="col-md-8">
+                    <div class="accordion accordion-flush" id="accordionFlushExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="flush-headingOne">
+                            <button class="accordion-button bg-light collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                               Thuộc tính
+                            </button>
+                            </h2>
+                            {{!-- noi dung  --}}
+                            <div id="flush-collapseOne" class="accordion-collapse show collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    {{#each attributeList}}
+                                        {{!-- <input type="hidden" name="attribute[{{this.slug}}][attributeId]" value="{{this._id}}"> --}}
+                                        {{!-- <input type="hidden" name="attribute[{{this.slug}}][attribute]" value="{{this.name}}"> --}}
+                                        <select name="attribute[{{this.slug}}]" class="form-select mb-3" id="select_attribue_{{this.slug}}">
+                                            <option value=""> {{this.name}}</option>
+                                            {{#each this.option}}
+                                                <option value="{{this.value}}"> {{this.value}}</option>
+                                            {{/each}}
+                                        </select>
+                                    {{/each}}
+                                    {{#each goods.attribute}}
+                                        <script>
+                                            var option = '{{this.option}}';
+                                            var attributeId = '{{this.attributeId}}';
+                                           
+                                            document.getElementById('select_attribue_{{@key}}').value = '{{this}}';
+                                            
+
+                                        </script>
+                                    {{/each}}
+                                </div>
+                            </div>
+                        </div>
+                        {{!-- don vi  --}}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="flush-headingTwo">
+                            <button class="accordion-button bg-light collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                                Đơn vị
+                            </button>
+                            </h2>
+                            <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    <div class="py-2">
+                                        <div class="row">
+                                            <div class="col-md-3">{{this.unitId}}
+                                                <select class="form-select form-control-sm unitSelect" name="unitId" id="unit">
+                                                    <option value="">Trống</option>
+                                                        {{#each unitList}}
+                                                            <option value="{{this.name}}"> {{this.name}}</option>
+                                                        {{/each}}
+                                                </select>
+                                                <script>
+                                                        document.getElementById('unit').value = '{{goods.unitId}}';
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
+                    </div>
+
+
+                </div>
+                <div class="col-md-12">
+                    <div class="button-submit my-3">
+                        <button type="submit" name="save" value="save" class="btn btn-primary mr-3">Lưu</button>
+                        <button type="submit" name="save" value="saveAndReview" class="btn btn-primary mr-3">Lưu và xem lại</button>
+                        <button type="submit" name="save" value="saveAndNew" class="btn btn-primary mr-3">Lưu và thêm mới</button>
+                        <a href="{{module_path}}" value="saveAndNew" class="btn btn-danger mr-3">Hủy và quay lại</a>
+                    </div>
+                
+                </div>
+            </div>
+    </div>
+    
+</form>

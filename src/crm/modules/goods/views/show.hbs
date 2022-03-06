@@ -1,0 +1,448 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <a class="btn btn-sm btn-warning mb-2" href="/crm/goods">Xóa bộ lọc</a>
+            <form  method="GET" id="form-filter">
+                {{!-- loai hang  --}}
+                {{>filter_typeOfGoods}}
+                {{>filter_groupOfGoods}}
+                {{>filter_brand}}
+                {{>filter_attribute}}
+            </form>
+           
+        </div>
+        <div class="col-10">
+            <div class="row">
+                <div class="col-md-6">
+                    <form action="{{module_path}}" method="GET" id="form-search">
+                        <div class="input-group input-group-sm">
+                            
+                            <input type="text" placeholder="Tìm kiếm theo tên hoặc theo mã hàng" id="search" class="form-control" name="key" value="{{key}}" autocomplete="off">
+                            <span class="input-group-text text-danger" id="delete-search" style="cursor: pointer;">X</span>
+                            <select id="feildSearch" name="feild" style="width:100px !important;border: 1px solid #ced4da;">
+                                <option value="name">Theo tên</option>
+                                <option value="goodsCodeId">Theo mã </option>
+                            </select>
+                            <script>
+                                if('{{feild}}'){
+                                    $('#feildSearch').val('{{feild}}');
+                                }
+                            </script>
+                            <button type="submit" class="input-group-text btn btn-sm btn-primary"><i class="fa fa-search" aria-hidden="true"></i> Tìm kiếm</button>
+                        </div>
+                        <ul id="searchResult" style="display:none"> </ul>
+                    </form>
+                    <script>
+                        //khi thay doi truong 
+                        $('#feildSearch').change(function(){
+                            var key = $('#search').val();
+                            var feild = $(this).val();
+                            if(key != ''){
+                                $.get("/crm/goods/searchAjax?key="+key+"&feild="+feild , function(data, status){
+                                    $('#searchResult').css('display','');
+                                    $('#delete-search').css('display','');
+                                    $('#searchResult').html(data);
+
+                                });
+                            }else{
+                                $('#delete-search').css('display','none');
+                                $('#searchResult').css('display','none');
+                            }
+                        });
+
+                        $('#search').keyup(function(){
+                            var key = $(this).val();
+                            var feild = $('#feildSearch').val();
+                            if(key != ''){
+                                $.get("/crm/goods/searchAjax?key="+key+"&feild="+feild , function(data, status){
+                                    $('#searchResult').css('display','');
+                                    $('#delete-search').css('display','');
+                                    $('#searchResult').html(data);
+
+                                });
+                            }else{
+                                $('#delete-search').css('display','none');
+                                $('#searchResult').css('display','none');
+                            }
+
+                            
+                        });
+                        //chon tim kiem
+                            $('#searchResult').on('click','.liSearch',function(){
+                                var key = $(this).attr('data-key');
+                                $('#search').val(key);
+                                $('#form-search').submit();
+                            });
+                        //xoa search
+                            $('#delete-search').click(function(){
+                                $('#search').val('');
+                                $('#searchResult').css('display','none');
+                                $('#delete-search').css('display','none');
+                                window.location.href = '/crm/goods';
+                            });
+                        //an nut xoa tim kiem neu ko co key
+                            var key = '{{key}}';
+                            if(key){
+                                $('#delete-search').css('display','');
+                            }else{
+                                $('#delete-search').css('display','none');
+                            }
+                    </script>
+                    <style>
+                        form#form-search {
+                            position: relative;
+                        }
+                        ul#searchResult {
+                            position: absolute;
+                            background-color: #fff;
+                            z-index: 999;
+                            width: 100%;
+                            list-style: none;
+                            border: 1px solid #ced4da;
+                            border-radius: 0px 0px 3px 3px;
+                            padding-left: 0px;
+                        }
+                        ul#searchResult li {
+                            border-bottom: 1px solid #ced4da;
+                            padding: 6px 10px 6px 10px;
+                            cursor: pointer;
+                        }
+
+                    </style>
+                </div>
+                <div class="col-md-6 ">
+                    
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                           <i class="fa fa-plus"></i> Thêm mới
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{module_path}}/create/goods"><i class="fa fa-plus"></i> Thêm hàng hóa</a></li>
+                            <li><a class="dropdown-item" href="{{module_path}}/create/service"><i class="fa fa-plus"></i> Thêm dịch vụ</a></li>
+                            <li><a class="dropdown-item" href="{{module_path}}/create/combo"><i class="fa fa-plus"></i> Thêm combo</a></li>
+                            
+                        </ul>
+                    </div>
+
+
+                    <a href="{{module_path}}/create" class="btn btn-sm btn-primary">
+                        <i class="fas fa-fw fa-file-import"></i> Nhập file
+                    </a>
+                    <a href="{{module_path}}/create" class="btn btn-sm btn-primary">
+                        <i class="fas fa-fw fa-file-export"></i> Xuất file
+                    </a>
+       
+                   {{!-- cot  --}}
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
+                            <i class="fa fa-columns" aria-hidden="true"></i> Cột
+                            </button>
+                        </button>
+                        <div class="dropdown-menu p-2 text-muted" style="width: 300px; font-size:14px">
+                            <form id="form-col-goods" method="POST">
+                                <div class="row">
+                                    {{{displayColGoods}}}
+                                </div>
+                            </form>
+                            <script>
+                                $('.displayCol').click(function(){
+                                    var col = $(this).attr('data-col');
+                                   // gan bien va tra ve gia tri true false  
+                                    var isCheckboxAll = $(this).prop('checked');
+                                    if(isCheckboxAll == true){
+                                        $('.'+col).css('display',"");
+                                    }else{
+                                        $('.'+col).css('display',"none");
+                                    }
+
+
+                                    $.ajax({
+                                        url: "/crm/setup/ajax?_method=PUT",
+                                        type: "post",
+                                        data: $('.displayCol:checked').serialize(),
+                                        success: function(data) {
+                                            console.log('Thành công '+data);
+                                        }
+                                    });
+                               
+                                });
+                            </script>
+                            {{!-- luu cho truong da chon  --}}
+                        </div>
+                    </div>
+                   
+                </div>
+            </div>
+
+            
+            <hr>
+            <form name="container-form" action="{{module_path}}/handle-form-action" method="POST">
+                
+                <table class="table table-striped table-hover" style="font-size: 14px;">
+                    <thead>
+                        <tr>
+                            <th scope="col" width="1%">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="checkbox-all">
+                                    
+                                </div>
+                            </th>
+                            <th scope="col"></th>
+                            <th scope="col" class="col_img" style="display:none">Ảnh</th>
+                            <th scope="col" class="col_goodsCodeId" style="display:none">Mã hàng</th>
+                            <th scope="col">Tên</th>
+                            <th scope="col" class="col_price" style="display:none">Giá bán</th>
+                            <th scope="col" class="col_costPrice" style="display:none">Giá vốn</th>
+                            <th scope="col" class="col_inventoryCount" style="display:none">Tồn kho</th>
+                            
+                            <th scope="col" class="col_barcode" style="display:none">Mã vạch</th>
+                            <th scope="col" class="col_groupOfGoodsId" style="display:none">Nhóm hàng</th>
+                            <th scope="col" class="col_typeOfGoodsId" style="display:none">Loại hàng</th>
+                            <th scope="col" class="col_saleChannelLink" style="display:none">Liên kết <br> kênh bán</th>
+                            <th scope="col" class="col_supplierOrderCount" style="display:none">SL đặt nhà <br> cung cấp</th>
+                            <th scope="col" class="col_brandId" style="display:none">Thương hiệu</th>
+                            <th scope="col" class="col_customerOrderCount" style="display:none">SL khách đặt</th>
+                            <th scope="col" class="col_salesStatus" style="display:none">Trạng thái kinh doanh</th>
+                            <th scope="col" class="col_earnPoints" style="display:none">Tích điểm</th>
+                            <th scope="col" class="col_weight" style="display:none">Cân nặng</th>
+                            <th scope="col" class="col_directSales" style="display:none">Bán trực tiếp</th>
+                            <th scope="col" class="col_attribute" style="display:none">Thuộc tính</th>
+                            <th scope="col" class="col_unitId" style="display:none">Đơn vị</th>
+                            <th scope="col"></th>
+                            <th scope="col">Ngày</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            {{#each goodsList}}
+                                <tr>
+                                    <th scope="row">
+                                        <input class="form-check-input" type="checkbox" name="ids[]" value="{{this._id}}">
+                                    </th>
+                                    <td>
+                                        {{{ifStatusValue this.hot '<i class="fa fa-star text-warning"></i>' '<i class="fa fa-star text-light"></i>'}}}
+                                    </td>
+                                     <td class="col_img" style="display:none">
+                                        {{#if this.img}}   
+                                            {{{firstImage this.img ../userId '30px' ''}}} 
+                                        {{/if}}
+                                    </td>
+                                    {{!-- ma hang  --}}
+                                    <td class="col_goodsCodeId" style="display:none">
+                                        {{this.goodsCodeId}}
+                                    </td>
+                                    {{!-- ten  --}}
+                                    <td>
+                                        {{this.name}}
+                                    </td>
+                                    {{!-- gia ban  --}}
+                                    <td class="col_price" style="display:none">
+                                        {{#if this.price}}
+                                            <span class="money">{{this.price}}</span> đ
+                                        {{/if}}
+                                    </td>
+                                    {{!-- gia von  --}}
+                                    <td class="col_costPrice" style="display:none">
+                                        {{#if this.costPrice}}
+                                            <span class="money">{{this.costPrice}}</span> đ
+                                        {{/if}}
+                                    </td>
+                                    {{!-- ton kho  --}}
+                                    <td class="col_inventoryCount" style="display:none">
+                                        {{this.inventoryCount}}
+                                    </td>
+                                    
+                                    {{!-- ma vach  --}}
+                                    <td class="col_barcode" style="display:none">
+                                        {{this.barcode}}
+                                    </td>
+                                    {{!-- nhom hang  --}}
+                                    <td class="col_groupOfGoodsId" style="display:none">
+                                        {{this.groupOfGoodsId.name}}
+                                    </td>
+                                    {{!-- loai hang  --}}
+                                    <td class="col_typeOfGoodsId" style="display:none">
+                                        {{ifEquals this.typeOfGoodsId 'goods' 'Hàng hóa'}}
+                                        {{ifEquals this.typeOfGoodsId 'service' 'Dịch vụ'}}
+                                        {{ifEquals this.typeOfGoodsId 'combo' 'Combo'}}
+                                    </td>
+                                    {{!-- lien ket kenh ban  --}}
+                                    <td class="col_saleChannelLink" style="display:none">
+                                        {{this.saleChannelLink}}
+                                    </td>
+                                    {{!-- so luong dat nha cung cap  --}}
+                                    <td class="col_supplierOrderCount" style="display:none">
+                                        {{this.supplierOrderCount}}
+                                    </td>
+                                    {{!-- thuong hieu  --}}
+                                    <td class="col_brandId" style="display:none">
+                                        {{this.brandId.name}}
+                                    </td>
+                                    {{!-- so luong khach hang dat  --}}
+                                    <td class="customerOrderCount" style="display:none">
+                                        {{this.customerOrderCount}}
+                                    </td>
+                                    {{!-- trang thai kinh doanh --}}
+                                    <td class="col_salesStatus" style="display:none">
+                                        {{ifStatusValue this.salesStatus 'Đang kinh doanh' 'Ngừng kinh doanh'}}
+                                    </td>
+                                    {{!-- tich diem  --}}
+                                    <td class="col_earnPoints" style="display:none">
+                                        {{ifStatusValue this.earnPoints 'Có' 'Không'}}
+                                    </td>
+                                    {{!-- can nang--}}
+                                    <td class="col_weight" style="display:none">
+                                        {{this.weight}}
+                                    </td>
+                                    {{!-- ban truc tiep --}}
+                                    <td class="col_directSales" style="display:none">
+                                        {{ifStatusValue this.directSales 'Có' 'không'}}
+                                    </td>
+                                    {{!-- thuoc tinh--}}
+                                    <td class="col_attribute" style="display:none">
+                                        {{#each this.attribute}}
+                                            {{@key}} : {{this}} <br>
+                                        {{/each}}
+                                    </td>
+                                    {{!-- don vi --}}
+                                    <td class="col_unitId" style="display:none">
+                                        {{this.unitId}}
+                                    </td>
+                                    <td>
+                                        <a href="{{../module_path}}/{{this._id}}/edit/{{this.typeOfGoodsId}}" class="btn btn-primary btn-sm">
+                                            <i class="fa fa-edit"></i> Sửa
+                                        </a>
+                                    
+                                        <a href="#" data-name="{{this.name}}"   data-id="{{this._id}}" class="btn btn-danger btn-sm " data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                            <i class="fa fa-trash"></i> Xóa
+                                        </a>
+                                    </td>
+                                    
+                                    <td>
+                                    <span>
+                                            {{timecurren this.updatedAt}}
+                                    </span>
+                                    </td>
+                                </tr>
+                            {{else}}
+                                Trống
+                            {{/each}}
+
+                              <script>
+                                // checkbox cac truong da check box
+                                    var colGoods = '{{displayColGoodsVal.valueArray}}';
+                                    
+                                    var colGoods_slit = colGoods.split(",");
+                                    var i;
+                                    for (i = 0; i < colGoods_slit.length; i++) {
+                                        document.getElementById('f_'+colGoods_slit[i]).checked = true;
+                                        //document.getElementsByClassName('col_'+colGoods_slit[i]).style.display = ''; 
+                                        $('.col_'+colGoods_slit[i]).css('display','') 
+                                    } 
+                               
+                            </script>
+                    </tbody>
+                </table>
+                
+                <div class="row">
+                    <div class="col-md-2">
+                        <select name="action" class="form-select form-select-sm" required>
+                            <option value="" selected>-- Hành động --</option>
+                            <option value="delete">Xóa</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                         <button class="btn btn-sm btn-primary check-all-submit-btn disabled"> Thực hiện</button>
+                    </div>
+                </div>
+                <div class="text-end">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-end">
+                            {{{pagination TotalCount itemPerPageDefault}}}
+                        </ul>
+                    </nav>
+                    
+                </div>
+            </form>
+
+            <!-- Modal xoa  -->
+            <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Xóa vĩnh viễn </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Tên {{module_name}}: <span class="NameDelete"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-danger" id="btn-delete">Ok xóa </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            {{!-- form an xoa --}}
+            <form name="delete-form" method="POST" >
+            </form>
+
+            <script>
+                var id;
+                var deleteForm = document.forms['delete-form'];
+                var deleteModal = document.getElementById('deleteModal')
+                deleteModal.addEventListener('show.bs.modal', function (event) {
+                // Button that triggered the modal
+                var button = event.relatedTarget
+                
+                var id = button.getAttribute('data-id');
+                var catName = button.getAttribute('data-name');
+            
+                $('.NameDelete').html(catName);
+                
+                var btnDelete = document.getElementById('btn-delete');
+                btnDelete.onclick = function () {
+                    deleteForm.action =  '{{module_path}}/' + id + '/force?_method=DELETE';
+                    deleteForm.submit();
+                }
+            })
+            </script>
+
+            {{!-- //checkbox  --}}
+            <script>
+                var checkboxAll = $('#checkbox-all');
+                var ItemCheckbox = $('input[name="ids[]"]');
+                checkboxAll.change(function(){
+                    // gan bien va tra ve gia tri true false  
+                    var isCheckboxAll = $(this).prop('checked');
+                    ItemCheckbox.prop('checked',isCheckboxAll );
+                    renderCheckAllSubmitBtn();
+                });
+
+                //khi bo check 1 thang thi bo checkbox all
+                ItemCheckbox.change(function(){
+                    var ischeckboxAll = ItemCheckbox.length == $('input[name="ids[]"]:checked').length;
+                    checkboxAll.prop('checked',ischeckboxAll);
+                    renderCheckAllSubmitBtn();
+                })
+
+            </script>
+
+            {{!-- button thuc hien  --}}
+            <script>
+                var checkAllSubmitBtn = $('.check-all-submit-btn');
+            
+                function renderCheckAllSubmitBtn(){
+                    var checkedCount = $('input[name="ids[]"]:checked').length;
+                    if(checkedCount >0){
+                        checkAllSubmitBtn.removeClass('disabled');
+                    } else {
+                        console.log(checkAllSubmitBtn );
+                        checkAllSubmitBtn.addClass('disabled');
+                    }
+                }
+            </script>
+        </div>
+    </div>
+</div>
+

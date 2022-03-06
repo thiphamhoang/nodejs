@@ -1,0 +1,17 @@
+
+    {{#if this.option}}
+        {{#each this.option}}
+                <div class="form-check">
+                    <input class="form-check-input c_{{this.value}}" type="checkbox" name="feild[{{@../index}}][value][]" value="{{this._id}}" id="f_{{this._id}}" >
+                    <label class="form-check-label" for="f_{{this._id}}">
+                        {{this.value}} 
+                    </label>
+                </div>
+        {{/each}}
+    {{/if}}
+    {{#each this.value}}
+        <script>
+                var Checkbox = $('#f_{{this}}');
+                Checkbox.prop('checked',true);
+        </script>
+    {{/each}}

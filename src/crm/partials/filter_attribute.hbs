@@ -1,0 +1,49 @@
+ {{!-- loai hang hoa  --}}
+    <div class="sidebar sidebar_attribute  mb-3">
+        <div class="accordion" id="accordionattribute">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="S_attribute">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_attribute" aria-expanded="true" aria-controls="collapse_attribute">
+                    Thuộc tính
+                </button>
+                </h2>
+                <div id="collapse_attribute" class="accordion-collapse collapse show" aria-labelledby="S_attribute" data-bs-parent="#accordionattribute">
+                    <div class="accordion-body">
+                      
+                        {{#each attributeList}}
+                            {{!-- <input type="hidden" name="attribute[{{this.slug}}][attributeId]" value="{{this._id}}"> --}}
+                           <select name="attribute[{{this.slug}}]" class="form-select mb-2 select_attribute" id="select_filter_group_{{this.slug}}">
+                               <option value=""> {{this.name}}</option>
+                               {{#each this.option}}
+                                     <option value="{{this.value}}"> {{this.value}}</option>
+                               {{/each}}
+                           </select>
+                         
+            
+                        {{/each}}
+                        {{#each filterAttriVal}}
+                            <script>
+                                document.getElementById('select_filter_group_{{@key}}').value = '{{this}}';
+                            </script>
+
+                        {{/each}}
+
+                          
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+    </div>
+    {{!-- script bo loc  --}}
+    <script>
+        var formFilter = $('#form-filter');
+        var select_attribute = $('.select_attribute');
+        select_attribute.change(function(){
+            formFilter.action = 'action="{{module_path}}"'
+            formFilter.submit();
+        });
+    
+      
+    
+    </script>

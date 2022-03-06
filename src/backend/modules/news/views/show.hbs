@@ -1,0 +1,204 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class=" d-flex">
+                <span class="mx-2">
+                    
+                    <form action="{{module_path}}/store" method="POST">
+                        <input type="hidden" name="name" value="Bản nháp">
+                        <input type="hidden" name="status" value="off">
+                        <button class="btn btn-sm btn-danger" type="submit">
+                            Thêm mới
+                        </button>
+                    </form>
+                        
+                </span>
+            
+                <span class="mx-2">
+                    <a href="{{module_path}}/trash" class="btn btn-sm btn-light">
+                        <i class="fa fa-trash"></i> Thùng rác ({{deleteCount}}) 
+                    </a>
+                </span>
+            </div>
+            <hr> 
+            <form name="container-form" action="{{module_path}}/handle-form-action" method="POST">
+                <div class="">
+                    Có tổng số {{TotalCount}} {{module_name}}
+                </div>
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col" width="1%">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="checkbox-all">
+                                    
+                                </div>
+                            </th>
+                            <th scope="col" width="2%">Ảnh</th>
+                            <th scope="col">Tên {{{sortable 'name' _sort}}}</th>
+                            <th scope="col">Danh mục</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th scope="col">Ngày {{{sortable 'createdAt' _sort}}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                 
+                        {{#each newsList}}
+                            <tr>
+                                <th scope="row">
+                                    <input class="form-check-input" type="checkbox" name="ids[]" value="{{this._id}}">
+                                    {{!-- {{sum @index 1}} --}}
+                                </th>
+                                <td>
+                                    {{#if this.img}}    
+                                        <img src="/img/news/{{this._id}}/{{this.img}}" height="30px" alt="">
+                                    {{/if}}
+                                </td>
+                                {{!-- ten  --}}
+                                <td>
+                                    <a class="text-dark fw-bold" href="/admin/{{../folder_module}}/{{this._id}}/edit">
+                                        {{this.name}}
+                                    </a>
+                                </td>
+                                {{!-- danh muc  --}}
+                                <td>
+                                    {{#each this.cat_id}}
+                                        {{ifBigger @index '0' ', '}}
+                                        <a href="/{{this.slug}}">
+                                            {{this.name}}{{this.slug}}
+                                        </a>  
+                                    {{/each}}
+                                   
+                                </td>
+                                <td>
+                                    <a href="{{../module_path}}/{{this._id}}/edit" class="btn btn-primary btn-sm">
+                                        <i class="fa fa-edit"></i> Sửa
+                                    </a>
+                                
+                                    <a href="#" data-name="{{this.name}}"   data-id="{{this._id}}" class="btn btn-danger btn-sm " data-bs-toggle="modal" data-bs-target="#deleteSoftModal">
+                                        <i class="fa fa-trash"></i> Xóa
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="/{{this.slug}}" target="_blank">
+                                    Xem
+                                    </a>
+                                </td>
+                                <td>
+                                   <span class="fs-6">
+                                        {{timecurren this.updatedAt}}
+                                   </span>
+                                </td>
+                            </tr>
+                        {{else}}
+                            Trống
+                        {{/each}}
+                    </tbody>
+                </table>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <select name="action" class="form-select form-select-sm" required>
+                            <option value="" selected>-- Hành động --</option>
+                            <option value="delete">Xóa</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                         <button class="btn btn-sm btn-primary check-all-submit-btn disabled"> Thực hiện</button>
+                    </div>
+                </div>
+                <div class="text-end">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-end">
+                            {{{pagination TotalCount itemPerPageDefault}}}
+                        </ul>
+                    </nav>
+                    
+                </div>
+
+            </form>
+
+            {{!-- xoa mem  --}}
+            <!-- Modal -->
+            <div class="modal fade" id="deleteSoftModal" tabindex="-1" aria-labelledby="deleteSoftModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteSoftModalLabel">Chuyển vào thùng rác </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Bài viết: <span class="name_delete"></span>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <button type="button" class="btn btn-danger " id="btn-delete-soft">Ok xóa</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{!-- form an  --}}
+            <form name="delete-soft-form" method="POST" >
+            </form>
+
+            <script>
+                var id;
+                var folder_module = '{{folder_module}}';
+                var deleteForm = document.forms['delete-soft-form'];
+                var deleteModal = document.getElementById('deleteSoftModal')
+                deleteModal.addEventListener('show.bs.modal', function (event) {
+                // Button that triggered the modal
+                var button = event.relatedTarget
+                
+                var id = button.getAttribute('data-id');
+                var name = button.getAttribute('data-name'); 
+                $('.name_delete').html(name);
+
+                var btnDelete = document.getElementById('btn-delete-soft');
+                btnDelete.onclick = function () {
+                    deleteForm.action = '{{module_path}}/' + id + '?_method=DELETE';
+                    deleteForm.submit();
+                }
+            })
+            </script>
+
+            {{!-- //checkbox  --}}
+            <script>
+                var checkboxAll = $('#checkbox-all');
+                var ItemCheckbox = $('input[name="ids[]"]');
+                checkboxAll.change(function(){
+                    // gan bien va tra ve gia tri true false  
+                    var isCheckboxAll = $(this).prop('checked');
+                    ItemCheckbox.prop('checked',isCheckboxAll );
+                    renderCheckAllSubmitBtn();
+                });
+
+                //khi bo check 1 thang thi bo checkbox all
+                ItemCheckbox.change(function(){
+                    var ischeckboxAll = ItemCheckbox.length == $('input[name="ids[]"]:checked').length;
+                    checkboxAll.prop('checked',ischeckboxAll);
+                    renderCheckAllSubmitBtn();
+                })
+
+            </script>
+
+            {{!-- button thuc hien  --}}
+            <script>
+                var checkAllSubmitBtn = $('.check-all-submit-btn');
+            
+                function renderCheckAllSubmitBtn(){
+                    var checkedCount = $('input[name="ids[]"]:checked').length;
+                    if(checkedCount >0){
+                        checkAllSubmitBtn.removeClass('disabled');
+                    } else {
+                        console.log(checkAllSubmitBtn );
+                        checkAllSubmitBtn.addClass('disabled');
+                    }
+                }
+            </script>
+        </div>
+    </div>
+</div>
+

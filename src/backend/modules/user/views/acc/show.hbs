@@ -1,0 +1,222 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class=" d-flex">
+                <span class="me-2">
+                    <a href="{{module_function_path}}/create?parentId={{parentId}}" class="btn btn-sm btn-danger">
+                        <i class="fa fa-plus"></i> Thêm mới tài khoản
+                    </a>
+          
+                </span>
+                <span class="mx-2">
+                    <a href="{{module_path}}/acc" class="btn btn-sm btn-primary">
+                        <i class="fa fa-user"></i> Tài khoản
+                    </a>
+                </span>
+                <span class="mx-2">
+                    <a href="{{module_path}}/role" class="btn btn-sm btn-primary">
+                        <i class="fa fa-user-shield"></i> Phân quyền
+                    </a>
+                </span>
+                <span class="mx-2">
+                    <a href="{{module_path}}/group" class="btn btn-sm btn-primary">
+                        <i class="fa fa-users"></i> Nhóm tài khoản
+                    </a>
+                </span>
+                    <form id="formFilter" clas="form-inline" action="{{module_path}}" method="get">
+                        <input type="hidden" name="filter" value="role">
+                        <span class="">
+                            <select name="groupId" id="selectGroup" class="form-select form-select-sm" onchange='if(this.value != 0) { this.form.submit(); }'>
+                                <option value="filterOff">Lọc nhóm</option>
+                                {{#each groupList}}
+                                    <option value="{{this._id}}">{{this.type}} - {{this.name}} </option>
+                                {{/each}}
+                            </select>
+                            <script>
+                                var val_current = '{{filter_roles}}';
+                                if(val_current != ''){
+                                     $('#selectGroup').val('{{filter_roles}}')
+                                }
+                               
+                                $('#selectGroup').change(function(){
+                                    var val = $(this).val()
+                                    if(val == 'filterOff'){
+                                        window.location.replace("{{module_path}}");
+                                    }else{
+                                        this.form.submit()
+                                    }
+                                })
+                                  
+                            </script>
+                        </span>
+                    </form>
+                
+            </div>
+            <hr> 
+            <form name="container-form" action="{{module_path}}/handle-form-action" method="POST">
+            
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col" width="1%">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="checkbox-all">
+                                    
+                                </div>
+                            </th>
+                            <th scope="col">Tên {{{sortable 'name' _sort}}}</th>
+                            <th scope="col">Tài khoản</th>
+                    
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th scope="col">Ngày {{{sortable 'createdAt' _sort}}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                 
+                        {{#each userList}}
+                            <tr>
+                                <th scope="row">
+                                    <input class="form-check-input" type="checkbox" name="ids[]" value="{{this._id}}">
+                                    {{!-- {{sum @index 1}} --}}
+                                </th>
+                                {{!-- ten  --}}
+                                <td>
+                                        {{this.name}}
+                                </td>
+                                <td>
+                                        {{this.username}}
+                                </td>
+                                {{!-- nhom  --}}
+                                <td>
+                                     {{this.groupId.name}}
+                                </td>
+                       
+                                <td>
+                                    <a href="{{../module_function_path}}/{{this._id}}/edit?parentId={{this.parentId}}" class="btn btn-primary btn-sm">
+                                        <i class="fa fa-edit"></i> Sửa
+                                    </a>
+                                
+                                    <a href="#" data-name="{{this.username}}"   data-id="{{this._id}}" class="btn btn-danger btn-sm " data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                        <i class="fa fa-trash"></i> Xóa
+                                    </a>
+                                </td>
+                            
+                                <td>
+                                   <span class="fs-6">
+                                        {{timecurren this.updatedAt}}
+                                   </span>
+                                </td>
+                            </tr>
+                        {{else}}
+                            Trống
+                        {{/each}}
+                    </tbody>
+                </table>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <select name="action" class="form-select form-select-sm" required>
+                            <option value="" selected>-- Hành động --</option>
+                            <option value="delete">Xóa</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                         <button class="btn btn-sm btn-primary check-all-submit-btn disabled"> Thực hiện</button>
+                    </div>
+                </div>
+                <div class="text-end">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-end">
+                            {{{pagination TotalCount itemPerPageDefault}}}
+                        </ul>
+                    </nav>
+                    
+                </div>
+
+            </form>
+
+           <!-- Modal xoa menu -->
+                <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel">Xóa vĩnh viễn </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Tên {{module_name}}: <span class="catNameDelete"></span>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                <button type="button" class="btn btn-danger" id="btn-delete">Ok xóa </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{!-- form an  --}}
+                <form name="delete-form" method="POST" >
+                </form>
+
+                <script>
+                    var id;
+                    var folder_module = '{{folder_module}}';
+                    var deleteForm = document.forms['delete-form'];
+                    var deleteModal = document.getElementById('deleteModal')
+                    deleteModal.addEventListener('show.bs.modal', function (event) {
+                    // Button that triggered the modal
+                    var button = event.relatedTarget
+                    
+                    var id = button.getAttribute('data-id');
+                    var catName = button.getAttribute('data-name');
+
+                    $('.catNameDelete').html(catName);
+                    
+                    var btnDelete = document.getElementById('btn-delete');
+                    btnDelete.onclick = function () {
+                        // /local/:idLocal/menuList/:idMenu
+                        deleteForm.action = '{{module_function_path}}/'+id+'/force?_method=DELETE';
+                        deleteForm.submit();
+                    }
+                })
+                </script>
+
+            {{!-- //checkbox  --}}
+            <script>
+                var checkboxAll = $('#checkbox-all');
+                var ItemCheckbox = $('input[name="ids[]"]');
+                checkboxAll.change(function(){
+                    // gan bien va tra ve gia tri true false  
+                    var isCheckboxAll = $(this).prop('checked');
+                    ItemCheckbox.prop('checked',isCheckboxAll );
+                    renderCheckAllSubmitBtn();
+                });
+
+                //khi bo check 1 thang thi bo checkbox all
+                ItemCheckbox.change(function(){
+                    var ischeckboxAll = ItemCheckbox.length == $('input[name="ids[]"]:checked').length;
+                    checkboxAll.prop('checked',ischeckboxAll);
+                    renderCheckAllSubmitBtn();
+                })
+
+            </script>
+
+            {{!-- button thuc hien  --}}
+            <script>
+                var checkAllSubmitBtn = $('.check-all-submit-btn');
+            
+                function renderCheckAllSubmitBtn(){
+                    var checkedCount = $('input[name="ids[]"]:checked').length;
+                    if(checkedCount >0){
+                        checkAllSubmitBtn.removeClass('disabled');
+                    } else {
+                        console.log(checkAllSubmitBtn );
+                        checkAllSubmitBtn.addClass('disabled');
+                    }
+                }
+            </script>
+        </div>
+    </div>
+</div>
+

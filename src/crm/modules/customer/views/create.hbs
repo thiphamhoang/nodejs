@@ -1,0 +1,152 @@
+
+
+<form action="{{module_path}}/store" method="POST" enctype="multipart/form-data">
+    <div class="container">
+           <div class="row">
+               <div class="col-md-6">
+                   
+                   <!-- ten danh muc -->
+                    <div class="form-group mb-3">
+                        <label >Tên {{module_name}}</label>
+                        <input type="text" class="form-control" name="name" required placeholder="Họ và tên">
+                    </div>
+                    {{!-- dien thoai  --}}
+                     <div class="form-group mb-3">
+                        <label >Số điện thoại</label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="phone_1" placeholder="Số điện thoại 1">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="phone_2" placeholder="Số điện thoại 2">
+                            </div>
+                        </div>
+                    </div>
+                    {{!-- ngay sinh  --}}
+                    <div class="form-group mb-3">
+                        <label >Ngày sinh</label>
+                        <input type="text" class="form-control" id="birthday" name="birthday">
+                        
+                        <script type="text/javascript">
+                            $('#birthday').datepicker({
+                            autoclose: true,
+                            format:'d-m-yyyy'
+                            });
+                        </script>
+                    </div>
+                    {{!-- gioi tinh  --}}
+                     <div class="form-group mb-3">
+                        <label >Giới tính</label>
+                        <select name="sex" class="form-select">
+                            {{!-- <option value="">Trống</option> --}}
+                            <option value="male">Nam</option>
+                            <option value="female">Nữ</option>
+                            <option value="other">Khác</option>
+                        </select>
+                    </div>
+                    {{!-- dia chỉ  --}}
+                    <div class="form-group mb-3">
+                        <label >Địa chỉ</label>
+                        <textarea type="textarea" class="form-control" name="address"></textarea>
+                    </div>
+                    <div class="form-group mb-3" >
+                       <div class="row">
+                           <div class="col-md-6">
+                               <label >Tỉnh - thành phố</label>
+                                <select name="cityId" class="form-select" id="city">
+                                    {{!-- <option value="">Trống</option> --}}
+                                    {{#each cityList}}
+                                        <option value="{{this._id}}">{{this.name}}</option>
+                                    {{/each}}
+                                </select>
+                           </div>
+                           <div class="col-md-6">
+                               <label for="">Quận huyện</label>
+                               <select name="districtId" class="form-select" id="district"></select>
+                           </div>
+                       </div>
+                       <script>
+                           $('#city').change(function(){
+                               var cityId = $(this).val();
+                               $.get('/crm/district/getDictrict/'+cityId,function(data){
+                                    $('#district').html(data)
+                                })
+                           });
+                            
+                       </script>
+                    </div>
+                     <div class="form-group mb-3">
+                        <label for="formFile" class="form-label">Ảnh đại diện</label>
+                        <input class="form-control" name="img" type="file">
+                    </div>
+               </div>
+               <div class="col-md-6">
+                   {{!-- loai khach  --}}
+                    <div class="form-group mb-3">
+                        <label >Loại khách</label>
+                        <select name="typeOfCustomer" class="form-select" id="typeOfCustome">
+                            <option value="personal">Cá nhân</option>
+                            <option value="company">Công ty</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-3" style="display:none" id="div_company">
+                        <label >Công ty</label>
+                        <input type="text" class="form-control" name="company">
+                    </div>
+                    <script>
+                        $('#typeOfCustome').change(function(){
+                            var val = $(this).val();
+                            if(val == 'company'){
+                                $('#div_company').css('display','');
+                            }else{
+                                $('#div_company').css('display','none');
+                            }
+                        });
+                    </script>
+                    <div class="form-group mb-3" >
+                        <label>Mã số thuế</label>
+                        <input type="text" class="form-control" name="taxCode">
+                    </div>
+                    {{!-- email  --}}
+                    <div class="form-group mb-3" >
+                        <label>Email</label>
+                        <input type="text" class="form-control" name="email">
+                    </div>
+
+                    <div class="form-group mb-3" >
+                        <label>Facebook</label>
+                        <input type="text" class="form-control" name="facebook">
+                    </div>
+                    <div class="form-group mb-3" >
+                       <label >Nhóm</label>
+                        <select name="groupOfCustomerId" class="form-select">
+                            {{!-- <option value="">Trống</option> --}}
+                            {{#each groupOfCustomerList}}
+                                <option value="{{this._id}}">{{this.name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="form-group mb-3" >
+                       <label >Chi nhánh</label>
+                        <select name="branchId" class="form-select">
+                            {{!-- <option value="">Trống</option> --}}
+                            {{#each branchList}}
+                                <option value="{{this._id}}">{{this.name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="form-group mb-3" >
+                        <label>Ghi chú</label>
+                       <textarea type="textarea" class="form-control" name="note"></textarea>
+                    </div>
+                   
+               </div>
+               
+                <div class="col-md-12">
+                     <button type="submit" name="save" value="save" class="btn btn-primary mr-3">Lưu</button>
+                      <a href="{{module_path}}" class="btn btn-danger mr-3">Hủy và quay lại</a>
+                </div>
+            </div>
+    </div>
+    
+</form>

@@ -1,0 +1,106 @@
+.bg-blue {
+    --bs-bg-opacity: 1;
+    background-color: #0090da;
+}
+.button-submit.my-3 {
+  position: fixed;
+  bottom: 10px;
+  z-index: 9999;
+  right: 10px;
+}
+.navbar-blue .navbar-nav .nav-link.active, .navbar-blue .navbar-nav .show>.nav-link {
+  color: rgba(255, 255, 255);
+}
+.navbar-blue .navbar-nav .nav-link {
+  color: rgba(255, 255, 255);
+}
+.navbar-brand{
+  color: #fff;
+}
+.navbar-brand:hover {
+  color: #fff;
+}
+a {
+  text-decoration: none !important;
+}
+
+/* go nut bam o input number  */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance:textfield;
+}
+.cursorPoiter, .cursor {
+  cursor: pointer;
+}
+
+form#form-search {
+  position: relative;
+}
+ul#searchResult {
+  position: absolute;
+  background-color: #fff;
+  z-index: 999;
+  width: 100%;
+  list-style: none;
+  border: 1px solid #ced4da;
+  border-radius: 0px 0px 3px 3px;
+  padding-left: 0px;
+}
+ul#searchResult li {
+  border-bottom: 1px solid #ced4da;
+  padding: 6px 10px 6px 10px;
+  cursor: pointer;
+}
+.rowBill {
+  margin: 15px 0px;
+}
+
+ul#searchResultGoods {
+  position: absolute;
+  width: 100%;
+  background-color: #fff;
+  margin-top: 2px;
+  border: 1px solid #c8c9ca;
+  z-index: 9;
+  list-style: none;
+  padding-left: 0px;
+}
+li.liSearch {
+  border-bottom: 1px solid #dee2e6;
+  padding: 10px;
+}
+
+#feildSearchGoods, #feildSearch {
+  border-radius: 0px 5px 5px 0px;
+  color: #737c83;
+}
+.menuOrder {
+  font-size: 14px;
+}
+
+input,
+input::-webkit-input-placeholder {
+    font-size: 14px !important;
+    line-height: 3;
+}
+.buttonTab {
+    font-size: 14px;
+    color: #fff !important;
+    padding: 0.4rem 1rem !important;
+    background: #1c6399 !important;
+}
+.buttonTab.active {
+    background-color: #fff !important;
+    color: #0d6efd !important;
+}
+.priceCountItem, .priceItem {
+    color: #3391da !important;
+}
+.noBorder {
+    border: unset !important;
+}

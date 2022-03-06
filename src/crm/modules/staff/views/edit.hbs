@@ -1,0 +1,153 @@
+
+
+<form action="{{module_path}}/{{item._id}}?_method=PUT" method="POST">
+    <input type="hidden" name="slug" value="{{DBname}}">
+    <input type="hidden" name="type" value="subCustomer">
+       <div class="container">
+           <div class="row">
+                <div class="col-md-6">
+                   <!-- ten  -->
+                    <div class="form-group mb-3">
+                        <label >Tên {{module_name}} (username)</label>
+                        <input type="text" class="form-control" onkeyup="ChangeToSlug_cat();" value="{{item.username}}" id="username" placeholder="Bạn điền tên {{module_name}}" name="username" required>
+                    <script>
+                            function ChangeToSlug_cat(){
+                                var title, slug;
+                            
+                                //Lấy text từ thẻ input title_meta
+                                title = document.getElementById("username").value;
+                            
+                                //Đổi chữ hoa thành chữ thường
+                                slug = title.toLowerCase();
+                            
+                                //Đổi ký tự có dấu thành không dấu
+                                slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a');
+                                slug = slug.replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e');
+                                slug = slug.replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i');
+                                slug = slug.replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o');
+                                slug = slug.replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u');
+                                slug = slug.replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y');
+                                slug = slug.replace(/đ/gi, 'd');
+                                //Xóa các ký tự đặt biệt
+                                slug = slug.replace(/\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, '');
+                                //Đổi khoảng trắng thành ký tự gạch ngang
+                                slug = slug.replace(/ /gi, "-");
+                                //Đổi nhiều ký tự gạch ngang liên tiếp thành 1 ký tự gạch ngang
+                                //Phòng trường hợp người nhập vào quá nhiều ký tự trắng
+                                slug = slug.replace(/\-\-\-\-\-/gi, '-');
+                                slug = slug.replace(/\-\-\-\-/gi, '-');
+                                slug = slug.replace(/\-\-\-/gi, '-');
+                                slug = slug.replace(/\-\-/gi, '-');
+                                //Xóa các ký tự gạch ngang ở đầu và cuối
+                                slug = '@' + slug + '@';
+                                slug = slug.replace(/\@\-|\-\@|\@/gi, '');
+                                //In slug ra textbox có id “name_meta”
+                  
+                                document.getElementById('username').value = slug;
+                            }
+                        </script>
+                    </div>
+                    
+                    {{!-- doi mat khau  --}}
+                    <div class="form-check">
+                           <input class="form-check-input" type="checkbox" value="on" id="changepass" name="changepass">
+                           <label class="form-check-label" for="changepass">
+                              Đổi mật khẩu
+                           </label>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Mật khẩu(*)</label>
+                        <input type="password" class="form-control pass" placeholder="Mật khẩu" name="password" id="password" disabled required>
+                     </div>
+                    <!-- nhap lai mat khau -->
+                    <div class="form-group mb-3">
+                        <label>Nhập lại mật khẩu(*)</label>
+                        <input type="password" class="form-control pass" placeholder="Nhập lại mật khẩu" name="passwordConfirmation" id="confirm_password" disabled required>
+                    </div>
+                    <div id="checkPassword"></div>
+                    {{!-- check password  --}}
+                    <script>
+                        $(document).ready(function(){
+                           $("#changepass").change(function(){
+                              if($(this).is(":checked")){
+                                 $(".pass").removeAttr('disabled');  
+                              }
+                              else {
+                                 $(".pass").attr('disabled','');
+                              }
+                           });
+                        });
+                     </script>
+                    <script>
+                        var check = 'off';
+                        $('#password, #confirm_password').on('keyup', function () {
+                        if ($('#password').val() == $('#confirm_password').val()) {
+                            $('#checkPassword').html('Mật khẩu đã trùng nhau').css('color', 'green');
+                              $('#submit').removeAttr("disabled");
+                            
+                        } else 
+                            $('#checkPassword').html('Mật khẩu xác nhận lại chưa trùng').css('color', 'red');
+                            // $('#submit').prop("disabled", true);
+                        });
+                        
+                    </script>
+                 
+
+                    {{!-- nhom quyen  --}}
+                    <div class="form-group mb-3 group_permi_admin">
+                        <label for="name_cat_seo">Nhóm quyền</label>
+                        <select name="groupId" class="form-select" id="selectGroupid" required>
+                           {{#each staffGroupList}}
+                                <option value="{{this._id}}" data-type="{{this.type}}">{{ifEqualsElse this.parentId 0 '' '--' }} {{this.name}}</option>
+                           {{/each}}
+                        </select>
+                        
+                    </div>
+               
+                    <script>
+                        //gan gia tri 
+                        $('#selectGroupid').val('{{item.groupId}}')
+                    </script>
+                 
+                    
+                </div>
+                {{!-- thong tin khac  --}}
+                <div class="col-md-6">
+                   <div class="form-group mb-3">
+                         <label>Họ tên</label>
+                        <input type="text" class="form-control" value="{{item.name}}" placeholder="Họ tên" name="name"  >
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Số điện thoại</label>
+                        <input type="text" class="form-control" value="{{item.tel}}" placeholder="Điện thoại" name="tel">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Email của bạn</label>
+                        <input type="email" class="form-control" value="{{item.email}}" placeholder="Email thành viên" name="email">
+                     </div>  
+                     <div class="form-group mb-3">
+                        <label>Trạng thái</label>
+                        <select name="status" class="form-select" id="status" required>
+                            <option value="on" selected>Công khai</option>
+                            <option value="off">Khóa</option>
+                        </select>
+                         <script>
+                            var status = '{{item.status}}';
+                            $('#status').val(status);
+                        </script>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label >Ghi chú</label>
+                        <input type="text" class="form-control" value="{{item.note}}" name="note">
+                    </div>   
+                </div>
+                <div class="col-md-12">
+                    <div class=" my-3">
+                        <button type="submit" id="submit" class="btn btn-primary mr-3">Lưu</button>
+                        <a class="btn btn-danger" href="{{module_path}}">Hủy và quay lại</a>
+                    </div>
+                </div>
+
+            </div>
+    </div>
+</form>

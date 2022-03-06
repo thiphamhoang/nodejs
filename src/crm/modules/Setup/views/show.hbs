@@ -1,0 +1,78 @@
+
+
+<form action="{{module_path}}?_method=PUT" method="POST">
+    <div class="container">
+            <div class="row">
+               <div class="col-md-6">
+                   <h5>Cài đặt hiển thị cột ở mục hàng hóa</h5>
+                   <div class="row">
+                        {{{displayColGoods}}}
+                    </div>
+                    <script>
+                         // for cac danh cua bai viet hien tai 
+                            var colGoods = '{{displayColGoodsVal.valueArray}}';
+                        
+                            var colGoods_slit = colGoods.split(",");
+                            var i;
+                            for (i = 0; i < colGoods_slit.length; i++) {
+                                document.getElementById('f_'+colGoods_slit[i]).checked = true;
+                            } 
+                    </script>
+                   
+               </div>
+               <hr>
+               
+            </div>
+            {{!-- cot khach hang   --}}
+            <div class="row">
+               <div class="col-md-6">
+                   <h5>Cài đặt hiển thị cột ở mục khách hàng</h5>
+                   <div class="row">
+                        {{{displayColCustomer}}}
+                    </div>
+                    <script>
+                         // for cac danh cua bai viet hien tai 
+                            var colCustomer = '{{displayColCustomerVal.valueArray}}';
+                        
+                            var colCustomer_slit = colCustomer.split(",");
+                            var i;
+                            for (i = 0; i < colCustomer_slit.length; i++) {
+                                document.getElementById('fc_'+colCustomer_slit[i]).checked = true;
+                            } 
+                    </script>
+                   
+               </div>
+               <hr>
+               
+            </div>
+            {{!-- cot don hang--}}
+            <div class="row">
+               <div class="col-md-6">
+                   <h5>Cài đặt hiển thị cột ở mục đơn hàng</h5>
+                   <div class="row">
+                        {{{displayColOrder}}}
+                    </div>
+                    <script>
+                         // for cac danh cua bai viet hien tai 
+                            var colOrder = '{{displayColOrderVal.valueArray}}';
+                        
+                            var colOrder_slit = colOrder.split(",");
+                            var i;
+                            for (i = 0; i < colOrder_slit.length; i++) {
+                                document.getElementById('fo_'+colOrder_slit[i]).checked = true;
+                            } 
+                    </script>
+                   
+               </div>
+               <hr>
+               
+            </div>
+
+
+            <div class="row">
+                 <div class="col-md-12 mt-3">
+                     <button type="submit" class="btn btn-primary mr-3">Lưu</button>
+                </div>
+            </div>
+    </div>
+</form>

@@ -1,0 +1,61 @@
+
+
+<form action="{{module_function_path}}/{{idTheme}}/{{function_sub_name}}/{{row._id}}?_method=PUT" method="POST">
+<input type="hidden" name="themeId" value="{{idTheme}}">
+    <div class="container">
+           <div class="row">
+               <div class="col-md-6">
+                   <!-- ten  -->
+                    <div class="form-group mb-3">
+                        <label >Tên {{module_name}}</label>
+                        <input type="text" class="form-control" value="{{row.name}}" placeholder="Bạn điền tên {{module_name}}" name="name" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label >Tên tệp html</label>
+                        <input type="text" class="form-control" value="{{row.fileName}}" placeholder="" name="fileName" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label >Vị trí</label>
+                        <select name="local" id="local" class="form-select" required>
+                            <option value="head">Đầu website</option>
+                           <option value="body" selected="">Giữa website</option>
+                           <option value="footer">Chân website</option>
+                        </select>
+                        <script>
+                            $('#local').val('{{row.local}}');
+                        </script>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label >Lề</label>
+                        <select class="form-control" id="container" name="container">
+                            <option value="">Trống</option>
+                            <option value="container">Có lề</option>
+                            <option value="container-fluid">Không lề</option>
+                        </select>
+                        <script>
+                            $('#status').val('{{row.container}}');
+                        </script>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label >Trạng thái</label>
+                        <select id="status" name="status" class="form-select" required>
+                            <option value="on" selected>Công khai</option>
+                            <option value="off">Khóa</option>
+                        </select>
+                        <script>
+                            $('#status').val('{{row.status}}');
+                        </script>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label >Loại (tùy chọn nâng cao)</label>
+                        <input type="text" value="{{row.type}}" class="form-control"  name="type">
+                    </div>
+                    <div class=" my-3">
+                        <button type="submit"  class="btn btn-primary mr-3">Lưu</button>
+                        <a class="btn btn-danger" href="{{module_function_path}}/{{idTheme}}/{{function_sub_name}}">Hủy và quay lại</a>
+                    </div>
+               </div>
+            </div>
+    </div>
+    
+</form>

@@ -1,0 +1,333 @@
+
+
+<form action="{{module_path}}/store/{{typeOfGoods}}" method="POST" enctype="multipart/form-data">
+{{!-- nhomg hang hoa  --}}
+    <input type="hidden" name="typeOfGoodsId" value="{{typeOfGoods}}">
+    
+    <div class="container">
+           <div class="row">
+               <div class="col-md-4">
+                   <!-- ma hang hoa -->
+                    <div class="form-group mb-3">
+                        <label>Mã hàng hóa</label>
+                        <select class="form-select form-select-sm" name="goodsCodeId">
+                            <option value="">Trống </option>
+                            {{#each goodsCodeList}}
+                                <option value="{{this.name}}"> {{this.name}}</option>
+                            {{/each}}
+                        </select>
+                     </div>
+                      <!-- ma vach -->
+                    <div class="form-group mb-3">
+                        <label>Mã vạch</label>
+                        <input type="text" class="form-control form-control-sm" name="barcode">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="fw-bold">Tên {{typeOfGoods_name}}</label>
+                        <input type="text" class="form-control form-control-sm" name="name" required>
+                    </div>
+                    {{!-- nhóm hàng  --}}
+                    <div class="form-group mb-3">
+                        <label>Nhóm hàng hóa</label>
+                        <select class="form-select form-select-sm" name="groupOfGoodsId">
+                            <option value="">Trống </option>
+                            {{#each groupOfGoodsList}}
+                                <option value="{{this._id}}"> {{this.name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    {{!-- thuong hieu  --}}
+                    <div class="form-group mb-3">
+                        <label>Thương hiệu</label>
+                        <select class="form-select form-select-sm" name="brandId">
+                            <option value="">Trống </option>
+                            {{#each brandList}}
+                                <option value="{{this._id}}"> {{this.name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    {{!-- hinh anh  --}}
+                    <div class="mb-3">
+                        <label  >Ảnh đại diện</label>
+                        <input class="form-control form-control-sm" name="multi-files" type="file"  multiple>
+                    </div>
+                     {{!-- ban truc tiep  --}}
+                    <div class="form-group mb-3">
+                        <label>Trạng thái kinh doanh</label>
+                        <select class="form-select form-select-sm" name="salesStatus">
+                            <option value="on">Đang kinh doanh</option>
+                            <option value="off">Ngừng kinh doanh</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="col-md-4">
+                   <div class="form-group mb-3">
+                        <label>Giá vốn</label>
+                        <input type="number" min="0" max="99999999999" class="form-control form-control-sm" name="costPrice">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Giá bán</label>
+                        <input type="number" min="0" max="99999999999" class="form-control form-control-sm" name="price">
+                    </div>
+                    <div class="form-group mb-3" id="input_inventoryCount">
+                        <label>Tồn kho</label>
+                        <input type="number" min="0" max="99999999999" class="form-control form-control-sm" name="inventoryCount">
+                    </div>
+                    <div class="form-group mb-3" id="input_weight">
+                        <label>Trọng lượng</label>
+                        <input type="number" min="0" max="99999999999" class="form-control form-control-sm" name="weight">
+                    </div>
+                    {{!-- ban truc tiep  --}}
+                    <div class="form-group mb-3">
+                        <label>Bán trực tiếp</label>
+                        <select class="form-select form-select-sm" name="directSales">
+                            <option value="off">Không bán trực tiếp </option>
+                            <option value="on">Bán trực tiếp</option>
+                            
+                        </select>
+                    </div>
+                     {{!-- ban truc tiep  --}}
+                    <div class="form-group mb-3">
+                        <label>Tích điểm</label>
+                        <select class="form-select form-select-sm" name="earnPoints">
+                            <option value="off">Không tích điểm </option>
+                            <option value="on">Tích điểm</option>
+                            
+                        </select>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Nổi bật</label>
+                        <select class="form-select form-select-sm" name="hot">
+                            <option value="off">Không </option>
+                            <option value="on">Có</option>
+                            
+                        </select>
+                     </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group mb-3">
+                        <label>Mô tả</label>
+                        <textarea name="description" class="form-control" ></textarea>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Ghi chú</label>
+                        <textarea name="note" class="form-control" ></textarea>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Sản phẩm bán kèm</label>
+                        <div id="goodsSelected">
+
+                        </div>
+                        <div id="form-search">
+                            <div class="input-group input-group-sm">
+                                <input type="text" placeholder="Tìm kiếm theo tên hoặc theo mã hàng" id="search" class="form-control" name="key" value="{{key}}" autocomplete="off">
+                                <span class="input-group-text text-danger" id="delete-search" style="display:none; cursor: pointer;">X</span>
+                            </div>
+                            <div>
+                                <ul id="searchResult" style="display:none"> </ul>
+                            </div>
+                        </div>
+                         <script>
+                           
+                            $('#search').keyup(function(){
+                                var key = $(this).val();
+                                if(key != ''){
+                                    $.get("/crm/goods/searchAjax?key="+key+"&feild=name" , function(data, status){
+                                        $('#searchResult').css('display','');
+                                        $('#delete-search').css('display','');
+                                        $('#searchResult').html(data);
+                                    });
+                                }else{
+                                    $('#delete-search').css('display','none');
+                                    $('#searchResult').css('display','none');
+                                }
+
+                                
+                            });
+                            //chon tim kiem
+                                $('#searchResult').on('click','.liSearch',function(){
+                                    var id = $(this).attr('data-id');
+                                    var name = $(this).attr('data-key');
+                                    var count = $('.modCombo').length;
+
+                                    $('#goodsSelected').append('<div class="modCombo modCombo_'+count+'">'+
+                                        '<span class="delete-goode-selected" data-count="'+count+'"><i class="fa fa-trash text-danger" style="cursor:pointer"></i> </span>'+
+                                        '<input type="hidden" name="combo[]" value="'+id+'">'+
+                                        '<label>'+name+'</label>'+
+                                        '</div>');
+                                    $(this).remove();
+                                 
+                                });
+                            //xoa search
+                                $('#delete-search').click(function(){
+                                    $('#search').val('');
+                                    $('#searchResult').css('display','none');
+                                    $('#delete-search').css('display','none');
+                                   
+                                });
+                            //xoa lua chon
+                            $('#goodsSelected').on('click','.delete-goode-selected',function(){
+                                var count = $(this).attr('data-count');
+                                $('.modCombo_'+count).remove();
+                            });
+                            
+                        </script>
+                        <style>
+                            #form-search {
+                                position: relative;
+                            }
+                            ul#searchResult {
+                                position: absolute;
+                                background-color: #fff;
+                                z-index: 999;
+                                width: 100%;
+                                list-style: none;
+                                border: 1px solid #ced4da;
+                                border-radius: 0px 0px 3px 3px;
+                                padding-left: 0px;
+                            }
+                            ul#searchResult li {
+                                border-bottom: 1px solid #ced4da;
+                                padding: 6px 10px 6px 10px;
+                                cursor: pointer;
+                            }
+                            .modCombo {
+                                border-bottom: 1px solid #ced4da;
+                                padding: 5px;
+                            }
+                        </style>
+                    </div>
+                </div>
+
+                {{!-- thuoc tinh va don vi  --}}
+                <div class="col-md-12">
+                    <div class="accordion accordion-flush" id="accordionFlushExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="flush-headingOne">
+                            <button class="accordion-button bg-light collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                               Thuộc tính
+                            </button>
+                            </h2>
+                            {{!-- noi dung  --}}
+                            <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                     
+                                        <div class="py-2">
+                                            <div id="attributeHtml">
+
+                                            </div>
+
+                                            <span class="my-3 btn btn-sm btn-primary" id="btnAddAttribute" >
+                                                <i class="fa fa-plus"> </i> Thêm thuộc tính
+                                            </span>
+                                            <script>
+                                                $('#btnAddAttribute').click(function(){
+                                                    var count = $('.attributeRow').length;
+                                                    var key = count + 1;
+                                                    
+
+                                                    $('#attributeHtml').append('<div class="row mb-2 attributeRow attributeRow_'+key+'">'+
+                                                            '<div class="col-md-3">'+
+                                                                '<select class="form-select form-select-sm attributeSelect" name="attribute['+key+'][attributeId]" id="attSelect_'+key+'" data-key="attribute_'+key+'">'+
+                                                                        '{{#each attributeList}}'+
+                                                                            '<option value="{{this.name}}" data-attriIdSelect="{{this._id}}"> {{this.name}}</option>'+
+                                                                        '{{/each}}'+
+                                                                '</select>'+
+
+                                                            '</div>'+
+                                                            '<div class="col-md-3">'+
+                                                                '<select class="form-select form-select-sm" name="attribute['+key+'][optionId]" id="attribute_'+key+'">'+
+                                                                    
+                                                                '</select>'+
+                                                            '</div>'+
+                                                            '<div class="col-md-3">'+
+                                                                '<span class="btn btn-danger btn-delete-attri btn-delete-attri_'+key+'" data-rowAttr="attributeRow_'+key+'">Xóa</span>'+
+                                                            '</div>'+
+                                                            
+                                                    ' </div>'
+                                                    );
+
+                                                    var attr_fist = '{{attributeFist.name}}';
+                                                    var attr_fistId = '{{attributeFist._id}}';
+                                                    //set select cho gia tri dau tien 
+                                                    $('#attSelect_'+key).val(attr_fist);
+                                                    $.get("/crm/attribute/"+attr_fistId+"/selectOption" , function(data, status){
+                                                        $('#attribute_'+key).html(data);
+                                                    });
+                                                });
+                                            </script>
+                                            <script>
+                                                    //crm/attribute/:id/selectOption
+                                                    $('#attributeHtml').on('change','.attributeSelect',function(){
+                                                        var id = $(this).find("option:selected").attr('data-attriIdSelect');
+                                                        var attr_key = $(this).attr('data-key');
+                                                        
+                                                        $.get("/crm/attribute/"+id+"/selectOption" , function(data, status){
+                                                            $('#'+attr_key).html(data);
+                                                        });
+                                                    });
+                                                    $('#attributeHtml').on('click','.btn-delete-attri',function(){
+                                                        var rowAttr = $(this).attr('data-rowAttr');
+                                                        $('.'+rowAttr).remove();
+                                                    });
+                                                        
+                                            </script>
+                                        </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        {{!-- don vi  --}}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="flush-headingTwo">
+                            <button class="accordion-button bg-light collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                                Đơn vị
+                            </button>
+                            </h2>
+                            <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    <div class="py-2">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <select class="form-select form-control-sm unitSelect" name="unitId" id="unit">
+                                                    <option value="">Trống</option>
+                                                        {{#each unitList}}
+                                                            <option value="{{this.name}}"> {{this.name}}</option>
+                                                        {{/each}}
+                                                </select>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
+                    </div>
+
+
+                </div>
+                <div class="col-md-12">
+                    <div class="button-submit my-3">
+                        <button type="submit" name="save" value="save" class="btn btn-primary mr-3">Lưu</button>
+                        <button type="submit" name="save" value="saveAndReview" class="btn btn-primary mr-3">Lưu và xem lại</button>
+                        <button type="submit" name="save" value="saveAndNew" class="btn btn-primary mr-3">Lưu và thêm mới</button>
+                        <a href="{{module_path}}" value="saveAndNew" class="btn btn-danger mr-3">Hủy và quay lại</a>
+                    </div>
+                
+                </div>
+            </div>
+    </div>
+    
+</form>
+{{!-- dieu chinh input cho tung kieu hang hoa dich vu combo  --}}
+    <script>
+        var type = '{{typeOfGoods}}'; 
+        if(type == 'service'){
+            //an cac input
+            $('#input_inventoryCount').remove(); //ton kho
+            $('#input_weight').remove(); //trong luong
+        }
+    </script>

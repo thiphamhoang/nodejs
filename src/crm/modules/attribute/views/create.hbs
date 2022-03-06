@@ -1,0 +1,88 @@
+
+
+<form action="{{module_path}}/store" method="POST">
+    <div class="container">
+           <div class="row">
+               <div class="col-md-6">
+                   <!-- ten danh muc -->
+                    <div class="form-group mb-3">
+                        <label for="name_cat">Tên {{module_name}}:  <i>Ví dụ: màu sắc</i></label>
+                        <input type="text" class="form-control" id="name" name="name" required  onkeyup="ChangeToSlug();">
+                       
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="name_cat">Biến </label>
+                        <input type="text" class="form-control" id="slug" name="slug" required>
+                        <i>Ví dụ: color</i>
+
+                    </div>
+                    <script>
+                           function ChangeToSlug(){
+                                var title, slug;
+                                title = document.getElementById("name").value;
+                                document.getElementById('slug').value = title;
+                            }
+                    </script>
+                    
+               </div>
+                <div class="col-md-6">
+                     <div class="form-group mb-3 form-option">
+                        <label >Tạo lựa chọn cho các trường lựa chọn ví dụ: màu đỏ, màu xanh</label>
+                        
+                        <div class="row feild mb-3">
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" name="option[0][name]" placeholder="name">
+                            </div>
+                            <div class="col-md-7">
+                                <input type="text" class="form-control" name="option[0][value]" placeholder="value">
+                            </div>
+                           
+                        </div>
+                        
+                        <div id="add_feild"> </div>
+                         <div class="mt-2">
+                                * Name: Viết liền, không dấu <br>
+                                * Value: giá trị
+                            </div>
+                    
+                        <div class="text-right">
+                            <span href="#" class="btn btn-sm btn-primary cursor" id="add">Thêm tùy chọn</span>
+                        </div>
+                        <script>
+                            $('#add').click(function(e){
+                                e.preventDefault();
+                                var count = $('.feild').length;
+                                var key = count + 1;
+                                $('#add_feild').append('<div class="row feild mb-3 feild_'+key+'">'+
+                                
+                                        '<div class="col-md-4">'+
+                                            '<input type="text" class="form-control" name="option['+key+'][name]" placeholder="name">'+
+                                        '</div>'+
+                                        '<div class="col-md-7">'+
+                                            '<input type="text" class="form-control" name="option['+key+'][value]" placeholder="value">'+
+                                        '</div>'+
+                                        '<div class="col-md-1">'+
+                                        '<button class="btn btn-danger btn-delete-feild" data-classRow="feild_'+key+'">Xóa</buton>'+
+                                        '</div>'+
+                                
+                                '</div>');
+
+                            });
+                            $('#add_feild').on('click', '.btn-delete-feild',function(e){
+                                e.preventDefault();
+                                var classRow = $(this).attr('data-classRow');
+                                $('.'+classRow).remove();
+                            });
+                        
+                        </script>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                     <button type="submit" name="save" value="save" class="btn btn-primary mr-3">Lưu</button>
+                     <a href="{{module_path}}" class="btn btn-danger mr-3">Hủy và quay lại</a>
+                </div>
+            </div>
+    </div>
+    
+</form>

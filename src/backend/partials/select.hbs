@@ -1,0 +1,9 @@
+
+    <select name="feild[{{@index}}][value]" class="form-control" id="f_{{this._id}}">
+        {{#each this.option}}
+                <option value="{{this._id}}" {{ifEquals this._id ../this.value 'selected'}}>{{this.value}}</option>
+        {{/each}}
+    </select>
+    <script>
+          document.getElementById("f_{{this._id}}").value = "{{this.value}}";
+    </script>

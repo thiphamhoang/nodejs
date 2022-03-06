@@ -1,0 +1,115 @@
+
+
+<form action="{{module_path}}/store" method="POST">
+    <div class="container">
+           <div class="row">
+               <div class="col-md-6">
+                   <!-- ten danh muc -->
+                    <div class="form-group mb-3">
+                        <label for="name_cat">Tên danh mục</label>
+                        <input type="text" class="form-control" id="name" placeholder="Bạn điền tên danh mục" name="name" onkeyup="ChangeToSlug_cat();" value="" required>
+                     </div>
+                      <!-- slug danh muc -->
+                    <div class="form-group mb-3">
+                        <label for="slug_cat">Đường dẫn danh mục</label>
+                        <input type="text" class="form-control" id="slug" placeholder="slug danh mục" name="slug" value="" required>
+                     </div>
+                     <script>
+                        function ChangeToSlug_cat(){
+                            var title, slug;
+                         
+                            //Lấy text từ thẻ input title_meta
+                            title = document.getElementById("name").value;
+                         
+                            //Đổi chữ hoa thành chữ thường
+                            slug = title.toLowerCase();
+                         
+                            //Đổi ký tự có dấu thành không dấu
+                            slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a');
+                            slug = slug.replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e');
+                            slug = slug.replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i');
+                            slug = slug.replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o');
+                            slug = slug.replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u');
+                            slug = slug.replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y');
+                            slug = slug.replace(/đ/gi, 'd');
+                            //Xóa các ký tự đặt biệt
+                            slug = slug.replace(/\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, '');
+                            //Đổi khoảng trắng thành ký tự gạch ngang
+                            slug = slug.replace(/ /gi, "-");
+                            //Đổi nhiều ký tự gạch ngang liên tiếp thành 1 ký tự gạch ngang
+                            //Phòng trường hợp người nhập vào quá nhiều ký tự trắng
+                            slug = slug.replace(/\-\-\-\-\-/gi, '-');
+                            slug = slug.replace(/\-\-\-\-/gi, '-');
+                            slug = slug.replace(/\-\-\-/gi, '-');
+                            slug = slug.replace(/\-\-/gi, '-');
+                            //Xóa các ký tự gạch ngang ở đầu và cuối
+                            slug = '@' + slug + '@';
+                            slug = slug.replace(/\@\-|\-\@|\@/gi, '');
+                            //In slug ra textbox có id “name_meta”
+                            document.getElementById('slug').value = slug;
+                        }
+                     </script>
+                     <!-- danh mục cha -->
+                     <div class="form-group mb-3">
+                        <label for="parent_cat">Danh mục cha</label>
+                   
+                        <select class="form-control" name="parentId" id="parentId">
+                                <option value="0">Trống </option>
+                                {{{selectParent catList '0'}}}
+                        </select>
+                     </div>
+
+                     <div class="form-group mb-3">
+                        <label for="name_cat_seo">Mô tả ngắn</label>
+                        <textarea class="form-control" name="des"></textarea>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="name_cat_seo">Trạng thái</label>
+                        <select name="status" class="form-select" required>
+                            <option value="on" selected>Công khai</option>
+                            <option value="off">Khóa</option>
+                        </select>
+                    </div>
+               </div>
+                <div class="col-md-6">
+                   <!-- tiêu đề SEO -->
+                   <div class="form-group mb-3">
+                        <label for="name_cat_seo">Tiêu đề SEO</label>
+                        <input type="text" class="form-control" id="title_seo" placeholder="Bạn điền tiêu đề SEO" name="title_seo" value="">
+                     </div>
+                      <!-- mô tả danh mục  -->
+                     <div class="form-group mb-3">
+                        <label>Mô tả danh mục (SEO - Meta Description)</label>
+                        <textarea  class="form-control" id="des_seo" rows="3" name="des_seo" placeholder="Bạn điền mô tả danh mục (tối đa 325 ký tự)" ></textarea>
+                     </div>
+                     <!-- meta keyword-->
+                     <div class="form-group mb-3">
+                        <label for="name_cat">Keyword(SEO - Meta keyword)</label>
+                        <input type="text" class="form-control" id="key_seo" placeholder="Bạn điền keyword, cách nhau dấu phẩy" name="key_seo" value="">
+                     </div>
+                    <hr>
+                    <div class="form-group mb-3">
+                        <label for="name_cat_seo">Định danh danh mục</label>
+                        <select name="type" class="form-select" required>
+                            <option value="news" selected>Bài viết</option>
+                            <option value="product">Sản phẩm</option>
+                            <option value="service">Dịch vụ</option>
+                            <option value="page">Page</option>
+                        </select>
+                    </div>
+                   
+                        
+                </div>
+                <div class="col-md-12">
+                    <div class="button-submit my-3">
+                        <button type="submit" name="save" value="save" class="btn btn-primary mr-3">Lưu</button>
+                        <button type="submit" name="save" value="saveAndReview" class="btn btn-primary mr-3">Lưu và xem lại</button>
+                        <button type="submit" name="save" value="saveAndNew" class="btn btn-primary mr-3">Lưu và thêm mới</button>
+                        <a href="{{module_path}}" value="saveAndNew" class="btn btn-danger mr-3">Hủy và quay lại</a>
+                    </div>
+                
+                </div>
+            </div>
+    </div>
+    
+</form>

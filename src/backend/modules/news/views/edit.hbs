@@ -1,0 +1,371 @@
+
+
+<form action="/admin/{{folder_module}}/{{news._id}}?_method=PUT" method="POST" enctype="multipart/form-data">
+   <input type="hidden" name="oldImage" value="{{news.img}}" id="oldImage">
+   <input type="hidden" name="deleteImage" id="deleteImage">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="form-group mb-3">
+                    <label class="mb-1">Tiêu đề</label>
+                    <input type="text" name="name" value="{{news.name}}" id="name_news" class="form-control" onkeyup="ChangeToSlug();" required>
+                </div>
+          
+                <div class="form-group mb-3">
+                    <label class="mb-1">Link bài viết</label>
+                    <div class="input-group">
+                        <span class="input-group-text" id="basic-slug">{{host}}</span>
+                        <input type="text" name="slug" value="{{news.slug}}" class="form-control" id="slug_news" aria-describedby="basic-slug" required>
+                        <span class="input-group-text" id="basic-slug">.html</span>
+                    </div>
+                    <script>
+                           function ChangeToSlug(){
+                                var title, slug;
+                                //Lấy text từ thẻ input title_news
+                                title = document.getElementById("name_news").value;
+                                //Đổi chữ hoa thành chữ thường
+                                slug = title.toLowerCase();
+                                //Đổi ký tự có dấu thành không dấu
+                                slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a');
+                                slug = slug.replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e');
+                                slug = slug.replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i');
+                                slug = slug.replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o');
+                                slug = slug.replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u');
+                                slug = slug.replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y');
+                                slug = slug.replace(/đ/gi, 'd');
+                                //Xóa các ký tự đặt biệt
+                                slug = slug.replace(/\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, '');
+                                //Đổi khoảng trắng thành ký tự gạch ngang
+                                slug = slug.replace(/ /gi, "-");
+                                //Đổi nhiều ký tự gạch ngang liên tiếp thành 1 ký tự gạch ngang
+                                //Phòng trường hợp người nhập vào quá nhiều ký tự trắng
+                                slug = slug.replace(/\-\-\-\-\-/gi, '-');
+                                slug = slug.replace(/\-\-\-\-/gi, '-');
+                                slug = slug.replace(/\-\-\-/gi, '-');
+                                slug = slug.replace(/\-\-/gi, '-');
+                                //Xóa các ký tự gạch ngang ở đầu và cuối
+                                slug = '@' + slug + '@';
+                                slug = slug.replace(/\@\-|\-\@|\@/gi, '');
+                                //In slug ra textbox có id “url_news”
+                                document.getElementById('slug_news').value = slug;
+                                $('.google_url').html(slug);
+                                $('.google_title').html(title);
+                            }
+                    </script>
+                </div>
+                 <div class="form-group mb-3"></div>
+                <div class="form-group mb-3">
+                    <label class="mb-1">Nội dung</label>
+                    <textarea class="form-control" id="content_news" rows="3" name="content">{{news.content}}</textarea>
+
+                    <script>
+                        tinymce.init({
+                            editor_selector : "mceEditor",
+                            selector: '#content_news',height: 500,
+                            relative_urls:false,
+                            extended_valid_elements: 'script[language|type|src]',
+
+                            toolbar1: "undo redo | insert | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | styleselect",
+                            toolbar2: "addImageButton image media | textAmiSlide textUpload textCol | fontsizeselect | link unlink anchor | forecolor backcolor  | print preview code emoticons | webux_upload",
+
+                            powerpaste_allow_local_images: true,
+                            powerpaste_word_import: true,
+                            powerpaste_html_import: 'prompt',
+                            paste_data_images: true,
+                            image_advtab: true ,
+                            language: 'vi_VN',
+                            font_formats: 'Arial Black=arial black,avant garde;Indie Flower=indie flower, cursive;Times New Roman=times new roman,times;',
+
+                            plugins: [
+                                    "image advlist autolink link image lists charmap print preview hr anchor pagebreak",
+                                    "searchreplace wordcount visualblocks visualchars insertdatetime media nonbreaking fullscreen",
+                                    "table contextmenu directionality emoticons paste textcolor  code noneditable code"
+                            ],
+                        
+                            contextmenu: "paste copy cut | image | inserttable | bold italic | fontsizes | align | removeformat | link unlink",
+                            table_default_attributes: {
+                                class: 'mac_dinh'
+                            },
+                            rel_list: [
+                                {title: 'follow', value: 'follow'},
+                                {title: 'nofollow', value: 'nofollow'}
+                                ],
+                            image_advtab: true,
+                            fontsize_formats: '8pt 9pt 10pt 11pt 12pt 13p 14px 15pt 16pt 17pt 18pt 19pt 20pt 21pt 22pt 23pt 24pt',
+                             setup: function (editor) {
+                                editor.ui.registry.addButton('addImageButton', {
+                                    text: '<i class="fas fa-images"></i>',
+                                    onAction: function (_) {
+                                        $('#post_image_upload').trigger('click')
+                                        $('#popup_upload').modal('show');
+                                    }
+                                });
+
+                            },
+                        });
+
+                    </script>
+                    {{!-- model upload image  --}}
+                    <div class="modal fade" id="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h6 class="modal-title" id="exampleModalCenterTitle">Thêm ảnh</h6>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="" name="form-example-1" id="form_upload" enctype="multipart/form-data" method="post" id="upload">
+                                    @csrf
+                                    <div class="">
+                                        <input type="file" name="files[]" id="files" placeholder="Choose files" multiple >
+                                    </div> 
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                        <button type="submit" class="btn btn-primary cursor" id="send_img">Gửi ảnh</button>
+                                    </div>   
+                                </form>
+                            </div> <!-- dong the modal -body -->
+                        </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="popup_upload" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Upload hình ảnh</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form  id="form_upload" enctype="multipart/form-data" method="post" >
+                                            <div class="">
+                                                <input type="hidden" name="newsId" value="{{news._id}}">
+                                                <input type="file" name="multi-files" id="files" placeholder="Choose files" multiple >
+                                            </div> 
+                                
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                            <button type="submit" class="btn btn-primary cursor" id="send_img">Upload ảnh</button>
+                                        </div>
+                                    </form>
+                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>                  
+                        $('#form_upload').on('submit', function (event) {
+                        // Stop propagation
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                            var formData = new FormData(this);
+                            let TotalFiles = $('#files')[0].files.length; //Total files
+                            let files = $('#files')[0];
+                            for (let i = 0; i < TotalFiles; i++) {
+                            formData.append('files' + i, files.files[i]);
+                            }
+                            formData.append('TotalFiles', TotalFiles);
+                            $.ajax({
+                            type:'POST',
+                                url: '/admin/{{folder_module}}/{{news._id}}/uploadImages',
+                                data: formData,
+                                cache:false,
+                                contentType: false,
+                                processData: false,
+                                dataType: 'json',
+                                success: (data) => {
+                                    this.reset();
+                                    alert('Bạn đã upload ảnh thành công');
+                                    
+                                    $.each(data, function (index, value) {
+                                        tinymce.activeEditor.execCommand('mceInsertContent', false, '<figure class="expNoEdit">'+value+'</figure></br></br>');
+                                    });
+                                },
+                                error: function(data){
+                                    alert(data.responseJSON.errors.files[0]);
+                                    console.log(data.responseJSON.errors);
+                                }
+                            });
+                        });
+
+                    </script>
+                </div>
+                <div class="form-group mb-3">
+                    <label class="mb-1">Mô tả</label>
+                    <textarea class="form-control" rows="3" name="des">{{news.des}}</textarea>
+                </div>  
+                <hr>
+                    
+                <div class="">
+                        <h4>Tối ưu SEO</h4>
+                        <div class="form-group google_snipet" style="padding: 10px; background-color: #f0f0f1; border-radius: 5px;">
+                            <div class="">{{host}}/<span class="google_url"> </span></div>
+                            <div class="" style="color: #2330ab;font-size: 20px;">
+                                <span class="google_title"></span>
+                            </div>
+                            <div class=""><span class="google_des"></span></div>
+                        </div>
+                        <!-- tieu de bài viết  -->
+                        <div class="form-group mb-3">
+                            <label>Tiêu đề SEO (Số lượng tiêu chuẩn 60 ký tự | hiện tại : <span id="count_title"></span>)</label>
+                            <input id="seo_title" type="text" class="form-control" placeholder="Bạn điền tiêu đề" name="title_seo" value="{{news.title_seo}}">
+                        </div>
+                        <!-- mô tả bài viết  -->
+                        <div class="form-group mb-3">
+                            <label>Mô tả bài viết (Số lượng tiêu chuẩn 215 ký tự | hiện tại : <span id="count_des"></span>)</label>
+                            <textarea id="seo_des" class="form-control" rows="3" name="des_seo" placeholder="Bạn điền mô tả bài viết">{{news.des_seo}}</textarea>
+                        </div>
+                        <!-- meta keyword bài viết  -->
+                        <div class="form-group">
+                            <label>Keywords (SEO - Meta keyword)</label>
+                            <input type="text"  class="form-control" rows="3" name="key_seo" value="{{news.key_seo}}" placeholder="Bạn điền từ khóa bài viết, cách nhau dấu phẩy" value="">
+                        </div>
+                        
+                        <script>
+                            //title 
+                            $('#seo_title').keyup(function(){
+                                var google_title = this.value;
+                                var title_count = this.value.length;
+                                $('#count_title').html(title_count);
+                                var title = $('#title_post').val();
+                                    if(google_title == ''){
+                                        $('.google_title').html(title);
+                                    }else{
+                                        $('.google_title').html(google_title);
+                                    }
+                                if(title_count <= 60){
+                                    $('#seo_title').addClass('border-success');
+                                }else if(title_count > 60 && title_count <= 70){
+                                    $('#seo_title').addClass('border-warning');
+                                }else{
+                                    $('#seo_title').addClass('border-danger');
+                                }
+                            });
+
+                            $('#seo_des').keyup(function(){
+                                var google_des = this.value;
+                                var des_count = this.value.length;
+                                $('#count_des').html(des_count);
+                                $('.google_des').html(google_des);
+                                if(des_count <= 215){
+                                    $('#seo_des').addClass('border-success');
+                                }else if(des_count > 215 && des_count <= 250){
+                                    $('#seo_des').addClass('border-warning');
+                                }else{
+                                    $('#seo_des').addClass('border-danger');
+                                }
+                            });
+                        </script>
+
+                    </div>
+            </div>
+            <div class="col-md-3">
+                {{!-- ngày đăng  --}}
+                <div class="form-group mb-3">
+                    <label class="fw-bolder">Ngày đăng: </label>
+                    {{timecurren news.updatedAt}}
+                </div>
+                {{!-- trang thai  --}}
+                <div class="form-group mb-3">
+                    <label class="fw-bolder">Trạng thái: </label>
+                    <select class="form-select" name="status" aria-label="Default select example">
+                            <option value="on" {{ifEquals news.status 'on' 'selected'}}>Công khai</option>
+                            <option value="off" {{ifEquals news.status 'off' 'selected'}}>Khóa</option>
+
+                    </select>
+                </div>
+                {{!-- danh muc  --}}
+                <div class="form-group mb-3">
+                    {{{checkboxMultiLevel catList}}}
+                    <script>
+                         // for cac danh cua bai viet hien tai 
+                            var news_cat_id = '{{news.cat_id}}';
+                            var news_cat_id_slit = news_cat_id.split(",");
+                            var i;
+                            for (i = 0; i < news_cat_id_slit.length; i++) {
+                                document.getElementById('f_'+news_cat_id_slit[i]).checked = true;
+                            } 
+                    </script>
+                    
+                </div>
+                {{!-- danh dai dien  --}}
+                <div class="mb-3">
+                    <label for="formFile" class="form-label">Ảnh đại diện</label>
+                    <input class="form-control" name="img" type="file" id="imgInp">
+                    {{!-- anh dai dien  --}}
+                    <div class="imgPreview" style="display:none" >
+                        {{!-- anh xem truoc  --}}
+                            <img id="blah" class="w-100 mt-3" src="#" />
+                         
+                        {{!-- xoa anh  --}}
+                        <span class="btn btn-secondary btn-sm mt-1 btn-delete-img">Xóa ảnh cũ</span>
+                        <span class="btn btn-info btn-sm mt-1 btn-delete-img-last" style="display:none">Hủy ảnh vừa chọn</span>
+                    </div>
+                    
+                    <script>
+                        //anh chinh sua
+                        var imgCurrent = '{{news.img}}';
+                        var news_id = '{{news._id}}';
+                        var folder_module = '{{folder_module}}';
+                        var oldImage = $('#oldImage').val();
+                        if(imgCurrent != ''){
+                            $('.imgPreview').css('display','');
+                            $('#blah').attr('src','/img/'+folder_module+'/'+news_id+'/'+imgCurrent)
+                        }
+                        //xem truoc anh vua upload 
+                        imgInp.onchange = evt => {
+                            const [file] = imgInp.files
+                            if (file) {
+                                $('.imgPreview').css('display','');
+                                blah.src = URL.createObjectURL(file)
+                                if(oldImage != ''){
+                                    $('#deleteImage').val('on');
+                                }else{
+                                    $('.btn-delete-img').css('display','none')
+                                }
+                                $('.btn-delete-img-last').css('display','');
+                            }
+                        }
+                        $('.btn-delete-img').click(function(){
+                            $('#imgInp').val('');
+                           
+                            $('.imgPreview').css('display','none');
+                            //add gia on va input deleteImage
+                            $('#deleteImage').val('on');
+                        });
+
+                       // huy anh vua chon 
+                        $('.btn-delete-img-last').click(function(){
+                            $('#imgInp').val('');
+                            if(oldImage != ''){
+                                $('#blah').attr('src','/img/'+folder_module+'/'+news_id+'/'+ oldImage);
+                            }else{
+                                 $('.imgPreview').css('display','none');
+                            }
+                            $('#deleteImage').val('');
+                            $('.btn-delete-img-last').css('display','none');
+                        });
+                    </script>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="button-submit my-3">
+                    
+                    <button type="submit" name="save" value="save" class="btn btn-sm btn-success mr-3">Lưu</button>
+                    <button type="submit" name="save" value="saveAndReview" class="btn btn-sm btn-primary mr-3">Lưu và xem lại</button>
+                    <button type="submit" name="save" value="saveAndNew" class="btn btn-sm btn-primary mr-3">Lưu và thêm mới</button>
+                    <button type="submit" name="save" value="caneAndDelete" class="btn btn-sm btn-danger mr-3">Hủy và xóa nháp</button>
+                    <a href="/admin/{{folder_module}}" class="btn btn-sm btn-primary">
+                        <i class="fas fa-arrow-left"></i> Quay lại
+                    </a>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+    
+</form>

@@ -1,0 +1,180 @@
+<div class="container-fluid">
+    <div class="row">
+        {{!-- danh sach vi tri menu  --}}
+        <div class="col-3">
+            <div class="">
+                
+                <ul class="list-group">
+                    <li class="list-group-item text-center fw-bold">
+                        Danh sách vị trí
+                    </li>
+                    
+                    {{#each rowList}}
+                        <li class="list-group-item d-flex justify-content-between align-items-start class_{{this._id}}">
+                            <div class="ms-2 me-auto">
+                                <a href="{{../module_function_path}}/{{../idTheme}}/{{../function_sub_name}}/{{this._id}}/feild" class="text-dark">
+                                    {{this.name}} 
+                                </a>
+                            </div>
+                            
+                            {{{ifStatusDipay this.status}}}
+                            <span class="badge bg-primary rounded-pill me-1" style="font-weight: 400!important;">
+                                 <a href="{{../module_function_path}}/{{../idTheme}}/{{../function_sub_name}}/{{this._id}}/edit" class="text-white">Sửa</a>
+                            </span>
+                            {{!-- <span class="badge bg-danger rounded-pill" style="font-weight: 400!important;">
+                                 <a href=""  class="text-white">Xóa</a>
+                            </span> --}}
+                        </li>
+                    {{else}}
+                         <li class="list-group-item text-center ">Trống</li>
+                    {{/each}}
+                    <script>
+                        $('.class_{{menuLocal._id}}').addClass('list-group-item-primary')
+                    </script>
+
+                    <li class="list-group-item text-center bg-primary">
+                        <a href="{{module_function_path}}/{{idTheme}}/{{function_sub_name}}/create" class=" text-white">Thêm hàng</a>
+                    </li>
+                </ul>
+            </div>
+        </div>  
+        <div class="col-9">
+            {{#if row._id}}
+                <h5>{{module_name}}: {{menuLocal.name}}</h5>
+                <span class="me-2">
+                    <a href="{{module_function_path}}/{{idTheme}}/{{function_sub_name}}/{{row._id}}/feild/create" class="btn btn-sm btn-primary">Thêm văn bản</a>
+                </span>
+                <hr>
+                <div class="">
+                    <form action="{{module_function_path}}/{{idTheme}}/{{function_sub_name}}/{{row._id}}/feild?_method=PUT" method="POST">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="inputFeild">
+                                    {{#each row.feild}}
+                                        {{!-- partial dong , lay tu hepper --}}
+                                        {{> (dynamicFeild this.type) }}
+
+                                        
+                                    {{/each}}
+                                 </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="themeId" value="{{idTheme}}">
+                        <button type="submit" class="btn btn-primary">Lưu</button>
+                    </form>
+                </div>
+                <hr>
+                <!-- xoa vi tri menu -->
+                <div>
+                    <span class="me-2">
+                        <a  class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteLocalModal">
+                            <i class="fa fa-trash"></i> Xóa toàn bộ hàng
+                        </a>
+                    </span>
+
+                    <!-- Modal xoa vi tri menu -->
+                        <div class="modal fade" id="deleteLocalModal" tabindex="-1" aria-labelledby="deleteLocalModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteLocalModalLabel">Xóa vĩnh viễn toàn bộ vị trí và menu</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Tên vị trí trình đơn: {{menuLocal.name}}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                        <form action="/admin/{{folder_module}}/local/{{menuLocal._id}}/force?_method=DELETE" method="POST" >
+                                                <button type="submit" class="btn btn-danger" >Ok xóa </button>
+                                        </form>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                
+                </div>
+                <script>
+                        // sap sep thu tu 
+                        $(document).ready(function () {
+                            var updateOutput = function (e) {
+                        
+                                var list = e.length ? e : $(e.target),
+                                    output = list.data('output');
+
+                                var menuLocal_id = '{{menuLocal._id}}';
+                                $.ajax({
+                                    method: "POST",
+                                    url: '{{module_function_path}}' + menuLocal_id + '/menuList/order',
+                                    data: {
+                                        list: list.nestable('serialize'),
+                                    
+                                    }
+                                }).fail(function (jqXHR, textStatus, errorThrown) {
+                                    alert("Unable to save new list order: " + errorThrown);
+                                });
+                            };
+
+                            $('.dd').nestable({
+                                group: 1,
+                                maxDepth: 7,
+                            }).on('change', updateOutput);
+                        });
+
+                </script>
+        
+            
+                <!-- Modal xoa menu -->
+                <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel">Xóa vĩnh viễn </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Tên {{module_name}}: <span class="NameDelete"></span>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                <button type="button" class="btn btn-danger" id="btn-delete">Ok xóa </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{!-- form an  --}}
+                <form name="delete-form" method="POST" >
+                </form>
+
+                <script>
+                    var id;
+                    var deleteForm = document.forms['delete-form'];
+                    var deleteModal = document.getElementById('deleteModal')
+                    deleteModal.addEventListener('show.bs.modal', function (event) {
+                    // Button that triggered the modal
+                    var button = event.relatedTarget
+                    
+                    var id = button.getAttribute('data-id');
+                    var NameDelete = button.getAttribute('data-name');
+                    var menuLocal_id = '{{menuLocal._id}}';
+
+                    $('.NameDelete').html(NameDelete);
+                    
+                    var btnDelete = document.getElementById('btn-delete');
+                    btnDelete.onclick = function () {
+                        // /local/:idLocal/menuList/:idMenu
+                        deleteForm.action = '{{module_function_path}}/'+menuLocal_id+'/{{function_sub_name}}/'+id+'/force?_method=DELETE';
+                        deleteForm.submit();
+                    }
+                })
+                </script>
+            {{else}}
+
+            {{/if}}
+
+        </div>
+    </div>
+</div>
+

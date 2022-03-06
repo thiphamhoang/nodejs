@@ -1,0 +1,200 @@
+
+<style>
+    li.nav-item.dropdown {
+        margin: 0px 10px;
+    }
+</style>
+<nav class="navbar navbar-expand-lg navbar-light" aria-label="Eleventh navbar example">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/" target="_blank">
+             <img class="" src="/img/framework/logo.png"  alt="logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExample09">
+           
+
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Hướng dẫn</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Cài đặt</a>
+                    </li>
+                 
+                    <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-bs-toggle="dropdown" aria-expanded="false">  {{username}}</a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown09">
+                        <li><a class="dropdown-item" href="#">Cá nhân</a></li>
+                        <li><a class="dropdown-item" href="#">Đổi mật khẩu</a></li>
+                        <li>
+                            <form action="/auth/logout?_method=DELETE" method="POST">
+                         
+                                <button type="submit" class="dropdown-item" href="admin/logout?_method=POST">Đăng xuất</button>
+                            </form>
+                        </li>
+                    </ul>
+                    </li>
+            </ul>
+        </div>
+      </div>
+</nav>
+
+<nav class="navbar navbar-expand-lg navbar-blue bg-blue" aria-label="Eleventh navbar example">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/crm/dashboardCrm">
+            <i class="fa fa-home"></i> 
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExample09">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-cube" ></i> Hàng hóa
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdown09">
+                        <li><a class="dropdown-item" href="/crm/goods"><i class="fa fa-th" ></i> Danh mục</a></li>
+                        <li><a class="dropdown-item" href="/crm/setupPrice"><i class="fa fa-tags" ></i> Thiết lập giá</a></li>
+                        <li><a class="dropdown-item" href="/crm/inventory"><i class="fas fa-clipboard-check" ></i> Kiểm kho</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog" ></i> Cài đặt danh mục</a>
+                            <ul class="submenu dropdown-menu" aria-labelledby="dropdown09">
+                                <li><a class="dropdown-item" href="/crm/groupOfGoods"> Nhóm hàng hóa</a></li>
+                                <li><a class="dropdown-item" href="/crm/brand"> Thương hiệu</a></li>
+                                <li><a class="dropdown-item" href="/crm/attribute"> Thuộc tính</a></li>
+                                <li><a class="dropdown-item" href="/crm/unit"> Đơn vị</a></li>
+                                
+                                <li><a class="dropdown-item" href="/crm/goodsCode"> Mã hàng hóa</a></li>
+                            </ul>   
+                        </li>
+                    </ul>
+                </li>
+                {{!-- giao dich  --}}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-american-sign-language-interpreting" aria-hidden="true"></i> Giao dịch
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdown09">
+                        <li><a class="dropdown-item" href="/crm/order"><i class="fas fa-inbox" ></i> Đặt hàng</a></li>
+                        <li><a class="dropdown-item" href="/crm/bill"><i class="fas fa-file-invoice-dollar" ></i> Hóa đơn</a></li>
+                        <li><a class="dropdown-item" href="/crm/billOfLading"><i class="fas fa-edit" ></i> Vận đơn</a></li>
+                        <li><a class="dropdown-item" href="/crm/returnGoods"><i class="fa fa-reply-all" ></i> Trả hàng</a></li>
+                        <li><a class="dropdown-item" href="/crm/importOrder"><i class="fa fa-download" ></i> Đặt hàng nhập</a></li>
+                        <li><a class="dropdown-item" href="/crm/importGoods"><i class="fas fa-cubes" ></i> Nhập hàng</a></li>
+                        <li><a class="dropdown-item" href="/crm/returnOfImportedGoods"><i class="fas fa-upload" ></i> Trả hàng nhập</a></li>
+                        <li><a class="dropdown-item" href="/crm/exportCancellation"><i class="fas fa-trash" ></i> Xuất hủy</a></li>
+                        {{!-- cai dat  --}}
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog" ></i> Cài đặt giao dịch</a>
+                            <ul class="submenu dropdown-menu" aria-labelledby="dropdown09">
+                                <li><a class="dropdown-item" href="/crm/priceOther"> Thu khác</a></li>
+                                <li><a class="dropdown-item" href="/crm/statusOrder"> Trạng thái phiếu đặt hàng</a></li>
+                                <li><a class="dropdown-item" href="/crm/salesChannel"> Kênh bán</a></li>
+                                
+                                <li><a class="dropdown-item" href="/crm/city">Tỉnh - thành phố</a></li>
+                                <li><a class="dropdown-item" href="/crm/district"> Quận - huyện</a></li>
+                                <li><a class="dropdown-item" href="/crm/paymentMethod"> Phương thức thanh toán</a></li>
+                                <li><a class="dropdown-item" href="/crm/branch"> Chi nhánh</a></li>
+                              
+                            </ul>   
+                        </li>
+                    </ul>
+                </li> 
+                {{!-- doi tac  --}}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-tie "></i> Đối tác
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdown09">
+                        <li><a class="dropdown-item" href="/crm/customer"><i class="fas fa-user-alt" ></i> Khách hàng</a></li>
+                        <li><a class="dropdown-item" href="/crm/groupOfCustomer"><i class="fas fa-users" ></i> Nhómhách hàng</a></li>
+                        <li><a class="dropdown-item" href="/crm/supplier"><i class="fa fa-clipboard" ></i> Nhà cung cấp</a></li>
+                        <li><a class="dropdown-item" href="/crm/deliveryPartner"><i class="fa fa-archive" ></i> Đối tác giao hàng</a></li>
+                
+                    </ul>
+                </li> 
+                {{!-- so quy --}}
+                <li class="nav-item ">
+                    <a class="nav-link " href="/crm/cashBook">
+                        <i class="fa fa-credit-card"></i> Sổ quỹ
+                    </a>
+                    
+                </li> 
+                {{!--  báo cáo  --}}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-filter"></i> Báo cáo
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdown09">
+                        <li><a class="dropdown-item" href="/crm/report/endDay"><i class="fas fa-chart-pie" ></i> Cuối ngày</a></li>
+                        <li><a class="dropdown-item" href="/crm/report/sell"><i class="fas fa-paste" ></i> Bán hàng</a></li>
+                        <li><a class="dropdown-item" href="/crm/report/order"><i class="fas fa-inbox" ></i> Đặt hàng</a></li>
+                        <li><a class="dropdown-item" href="/crm/report/goods"><i class="fa fa-cube" ></i> Hàng hóa</a></li>
+                        <li><a class="dropdown-item" href="/crm/report/customer"><i class="fas fa-user-alt" ></i> Khách hàng</a></li>
+                        <li><a class="dropdown-item" href="/crm/report/supplier"><i class="fa fa-clipboard" ></i> Nhà cung cấp</a></li>
+                        <li><a class="dropdown-item" href="/crm/report/staff"><i class="fas fa-id-badge" ></i> Nhân viên</a></li>
+                        <li><a class="dropdown-item" href="/crm/report/salesChannel"><i class="fab fa-slideshare" ></i> Kênh bán hàng</a></li>
+                        <li><a class="dropdown-item" href="/crm/report/finance"><i class="fa fa-credit-card" ></i> Tài chính</a></li>
+
+                    </ul>
+                </li> 
+                {{!--  báo cáo  --}}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-cog"></i> Cài đặt
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdown09">
+                        {{!-- <li><a class="dropdown-item" href="/crm/typeOfGoods"> Loại hàng hóa</a></li> --}}
+                       
+                        <li><a class="dropdown-item" href="/crm/setup"> Cài đặt khác</a></li>
+                        <li><a class="dropdown-item" href="/crm/staff"> Nhân sự</a></li>
+                        <li><a class="dropdown-item" href="/crm/staffGroup"> Nhóm nhân sự</a></li>
+
+                    </ul>
+                </li> 
+                  
+            </ul>
+
+            <ul class="navbar-nav me-end mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">
+                            Bán hàng Online
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            Bán hàng
+                        </a>
+                    </li>
+    
+            </ul>
+        </div>
+      </div>
+</nav>
+<div class="container-fluid">
+    <div class="row my-3">
+        <div class="col-6">
+            <h3 class="">
+                {{title}}
+            </h3>
+        </div>
+        <div class="text-end col-6">
+            <a href="/admin/dashboard" class="btn btn-sm btn-light mx-2">Trang chủ</a>
+            <a href="/admin/{{folder_module}}" class="btn btn-sm btn-light mx-2">{{module_name}}</a>
+        </div>
+    </div>
+</div>
+<div class="container">
+
+    {{#if sessionFlash.message}}
+        <div class="{{ sessionFlash.type }} alert alert-danger" role="alert">
+            {{#each sessionFlash.message }}
+                {{this}} <br>
+            {{/each}}
+        </div>
+    {{/if}}
+
+</div>

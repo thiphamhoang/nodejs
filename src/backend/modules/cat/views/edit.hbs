@@ -1,0 +1,81 @@
+
+
+<form action="{{module_path}}/{{cat._id}}?_method=PUT" method="POST">
+    <div class="container">
+           <div class="row">
+               <div class="col-md-6">
+                   <!-- ten danh muc -->
+                    <div class="form-group mb-3">
+                        <label for="name_cat">Tên danh mục</label>
+                        <input type="text" class="form-control" id="name" placeholder="Bạn điền tên danh mục" name="name"  value="{{cat.name}}" required>
+                     </div>
+                      <!-- slug danh muc -->
+                    <div class="form-group mb-3">
+                        <label for="slug_cat">Đường dẫn danh mục</label>
+                        <input type="text" class="form-control" id="slug" placeholder="slug danh mục" name="slug" value="{{cat.slug}}" required>
+                     </div>
+        
+                     <!-- danh mục cha -->
+                     <div class="form-group mb-3">
+                        <label for="parent_cat">Danh mục cha</label>
+                   
+                        <select class="form-control" name="parentId" id="parentId">
+                                <option value="0">Trống </option>
+                                {{{selectParent catList IdParentCurrent}}}
+                        </select>
+                     </div>
+
+                    <div class="form-group mb-3">
+                        <label for="name_cat_seo">Mô tả ngắn</label>
+                        <textarea class="form-control" name="des">{{cat.des}}</textarea>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="name_cat_seo">Trạng thái</label>
+                        <select name="status" class="form-select" required>
+                            <option value="on" {{ifEquals cat.status 'on' 'selected'}}>Công khai</option>
+                            <option value="off" {{ifEquals cat.status 'off' 'selected'}}>Khóa</option>
+                        </select>
+                    </div>
+               </div>
+                <div class="col-md-6">
+                   <!-- tiêu đề SEO -->
+                   <div class="form-group mb-3">
+                        <label for="name_cat_seo">Tiêu đề SEO</label>
+                        <input type="text" class="form-control" id="title_seo" placeholder="Bạn điền tiêu đề SEO" name="title_seo" value="{{cat.title_seo}}">
+                     </div>
+                      <!-- mô tả danh mục  -->
+                     <div class="form-group mb-3">
+                        <label>Mô tả danh mục (SEO - Meta Description)</label>
+                        <textarea  class="form-control" id="des_seo" rows="3" name="des_seo" placeholder="Bạn điền mô tả danh mục (tối đa 325 ký tự)" >{{cat.des_seo}}</textarea>
+                     </div>
+                     <!-- meta keyword-->
+                     <div class="form-group mb-3">
+                        <label for="name_cat">Keyword(SEO - Meta keyword)</label>
+                        <input type="text" class="form-control" id="key_seo" placeholder="Bạn điền keyword, cách nhau dấu phẩy" name="key_seo" value="{{cat.key_seo}}">
+                     </div>
+                     <hr>
+                      <div class="form-group mb-3">
+                        <label for="name_cat_seo">Định danh danh mục</label>
+                        <select name="type" class="form-select" required>
+                            <option value="news" {{ifEquals cat.type 'news' 'selected'}}>Bài viết</option>
+                            <option value="product" {{ifEquals cat.type 'product' 'selected'}}>Sản phẩm</option>
+                            <option value="service" {{ifEquals cat.type 'service' 'selected'}}>Dịch vụ</option>
+                            <option value="page" {{ifEquals cat.type 'page' 'selected'}}>Page</option>
+                        </select>
+                     </div>
+                        
+                </div>
+                <div class="col-md-12">
+                    <div class="button-submit my-3">
+                        <button type="submit" name="save" value="save" class="btn btn-primary mr-3">Lưu</button>
+                        <button type="submit" name="save" value="saveAndReview" class="btn btn-primary mr-3">Lưu và xem lại</button>
+                        <button type="submit" name="save" value="saveAndNew" class="btn btn-primary mr-3">Lưu và thêm mới</button>
+                        <a href="{{module_path}}" value="saveAndNew" class="btn btn-danger mr-3">Hủy và quay lại</a>
+                    </div>
+                
+                </div>
+            </div>
+    </div>
+    
+</form>

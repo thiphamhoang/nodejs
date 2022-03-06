@@ -1,0 +1,44 @@
+
+
+<form action="{{module_function_path}}/store" method="POST">
+    <div class="container">
+           <div class="row">
+               <div class="col-md-6">
+                   <!-- ten  -->
+                    <div class="form-group mb-3">
+                        <label>Tên quyền tiếng việt</label>
+                        <input type="text" class="form-control"  placeholder="Bạn điền tên {{module_name}}" name="nameVi" required>
+                    </div>
+             
+                    <div class="form-group mb-3">
+                        <label >Quyền (viết tiếng anh)</label>
+                        <input type="text" class="form-control"  name="name" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Mô tả</label>
+                        <input type="text" class="form-control" name="des">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label >Loại</label>
+                        <select name="type" class="form-select" required>
+                            <option value="admin" selected>Admin</option>
+                            <option value="agency">Agency</option>
+                            <option value="customer">Khách hàng</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label >Trạng thái</label>
+                        <select name="status" class="form-select" required>
+                            <option value="on" selected>Công khai</option>
+                            <option value="off">Khóa</option>
+                        </select>
+                    </div>
+                    <div class=" my-3">
+                        <button type="submit"  class="btn btn-primary mr-3">Lưu</button>
+                        <a class="btn btn-danger" href="{{module_function_path}}">Hủy và quay lại</a>
+                    </div>
+               </div>
+            </div>
+    </div>
+    
+</form>
